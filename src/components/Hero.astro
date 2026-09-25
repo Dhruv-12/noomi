@@ -1,0 +1,239 @@
+---
+// The hero: a still photograph that comes alive on load.
+//   0.0–0.3s  soft and quiet        0.3–0.8s  resolves to sharp
+//   0.4–1.2s  light moves through the serum drop (its own masked layer)
+//   0.5–1.3s  the cream breathes (the base layer, around the swirl)
+//   0.7–1.4s  headline              0.9–1.5s  offer and CTA
+// then an almost invisible ambient loop. Transforms, opacity and one bounded
+// blur only; the photo is never warped. Reduced motion keeps the reveal, drops
+// the movement. When a campaign film exists (media.heroFilm), it replaces the
+// stills in the same box with this photo as its poster.
+import { getImage } from 'astro:assets';
+import Button from './Button.astro';
+import { products } from '../content/site';
+import { hero } from '../content/media';
+import { PREORDER_PCT } from '../lib/pricing';
+
+const img = await getImage({ src: hero.still.src, widths: [600, 900, 1136], format: 'webp', quality: 90 });
+const [serum, cream] = products;
+const film = hero.film;
+---
+<section class="hero" aria-labelledby="hero-title">
+  <div class="hero__content">
+    <h1 id="hero-title" class="wrap hero__title">
+      <span class="visually-hidden">Noomi. </span>
+      <span class="hero__line t-wide">Skincare,</span>
+      <span class="hero__line hero__line--2"><span class="t-wide">edited</span> <span class="t-black">to two.</span></span>
+    </h1>
+
+    <figure class="hero__plate">
+      <div class="hero__stage">
+        {film ? (
+          <video class="hero__film" autoplay muted loop playsinline preload="metadata" poster={img.src} aria-label={hero.still.alt} data-hero-film>
+            {film.webm && <source src={film.webm} type="video/webm" />}
+            {film.mp4 && <source src={film.mp4} type="video/mp4" />}
+          </video>
+        ) : (
+          <>
+            <img class="hero__still hero__still--cream" src={img.src} srcset={img.srcSet.attribute} sizes="(min-width: 900px) 46vw, 100vw"
+              width={hero.still.src.width} height={hero.still.src.height} alt={hero.still.alt} fetchpriority="high" decoding="async" data-temp-art />
+            <img class="hero__still hero__still--drop" src={img.src} srcset={img.srcSet.attribute} sizes="(min-width: 900px) 46vw, 100vw"
+              width={hero.still.src.width} height={hero.still.src.height} alt="" aria-hidden="true" decoding="async" />
+            <span class="hero__light" aria-hidden="true"></span>
+          </>
+        )}
+        <a class="pin pin--serum" href={`/products/${serum.slug}`}>{serum.name}</a>
+        <a class="pin pin--cream" href={`/products/${cream.slug}`}>{cream.name}</a>
+      </div>
+      <figcaption class="credit">Mood image, not the formula</figcaption>
+    </figure>
+
+    <div class="wrap hero__foot">
+      <p class="hero__sub">Two products. <strong>Pre-order now, <span class="hero__pct">{PREORDER_PCT}% off.</span></strong></p>
+      <Button href="#products" variant="on-dark">Shop the two</Button>
+    </div>
+  </div>
+</section>
+
+{film && (
+  <script>
+    // The film respects reduced motion and stops when it scrolls away.
+    const v = document.querySelector<HTMLVideoElement>('[data-hero-film]');
+    if (v) {
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) { v.removeAttribute('autoplay'); v.pause(); }
+      else new IntersectionObserver(([e]) => (e.isIntersecting ? v.play().catch(() => {}) : v.pause())).observe(v);
+    }
+  </script>
+)}
+
+<style>
+  /* The ground matches the plate's own edges (#EAF0F8 top, #001229 base),
+     so the photograph dissolves into the page instead of sitting in a box. */
+  .hero {
+    position: relative;
+    color: var(--ink);
+    background: linear-gradient(180deg, var(--mist) 0, var(--mist) 16%, #dbe6f2 30%, var(--depth) 78%, var(--ink) 100%);
+    overflow: clip;
+  }
+  .hero__content { display: grid; padding-bottom: var(--s6); }
+
+  /* ---------- Line ---------- */
+  .hero__title { position: relative; z-index: 2; display: grid; justify-items: start; margin-top: var(--s5); }
+  .hero__line { display: block; white-space: nowrap; }
+  .hero__line.t-wide,
+  .hero__line--2 .t-wide { font-size: clamp(1.875rem, 8.2vw, 2.75rem); line-height: 1.02; letter-spacing: -0.035em; }
+  .hero__line--2 { display: flex; align-items: baseline; gap: 0.3em; }
+  .hero__line--2 .t-black { font-size: clamp(2.5rem, 11vw, 3.75rem); line-height: 0.95; }
+
+  /* ---------- Plate ---------- */
+  .hero__plate {
+    --ia: calc(1136 / 1408);
+    --pos-x: 0.5;
+    --pos-y: 0.58;
+    /* image-cover geometry, shared by the callouts and the drop layer's mask */
+    --iw: max(100cqw, 100cqh * var(--ia));
+    --ih: max(100cqh, 100cqw / var(--ia));
+    position: relative;
+    z-index: 1;
+    height: min(110vw, 540px);
+    margin-top: calc(-1 * clamp(1rem, 6vw, 2.5rem));
+    container-type: size;
+  }
+  @media (min-width: 600px) and (max-width: 899px) { .hero__plate { height: min(96vw, 720px); } }
+
+  .hero__stage { position: absolute; inset: 0; }
+  .hero__still, .hero__film {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: calc(var(--pos-x) * 100%) calc(var(--pos-y) * 100%);
+    -webkit-mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+    mask-image: linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+  }
+  /* The drop's layer: the same photo, kept only left of where drop meets cream
+     (image x ≈ 0.47, mapped through the cover crop), feathered so any seam is invisible. */
+  .hero__still--drop, .hero__light {
+    --seam: calc(0.47 * var(--iw) - (var(--iw) - 100cqw) * var(--pos-x));
+    -webkit-mask-image: linear-gradient(90deg, #000 calc(var(--seam) - 36px), transparent calc(var(--seam) + 20px)), linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+    -webkit-mask-composite: source-in;
+    mask-image: linear-gradient(90deg, #000 calc(var(--seam) - 36px), transparent calc(var(--seam) + 20px)), linear-gradient(180deg, transparent 0, #000 14%, #000 86%, transparent 100%);
+    mask-composite: intersect;
+  }
+  .hero__still--cream { transform-origin: 74% 58%; }
+  .hero__still--drop { transform-origin: 26% 66%; }
+  /* A studio light travelling through the drop */
+  .hero__light {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(100deg, transparent 42%, rgb(255 255 255 / 0.55) 50%, transparent 58%);
+    background-size: 260% 100%;
+    background-position: 130% 0;
+    mix-blend-mode: soft-light;
+    opacity: 0;
+  }
+
+  /* Callouts pinned in image coordinates (--u, --v); each leader ends on its texture */
+  .pin {
+    position: absolute;
+    z-index: 1;
+    left: calc(var(--u) * var(--iw) - (var(--iw) - 100cqw) * var(--pos-x));
+    top: calc(var(--v) * var(--ih) - (var(--ih) - 100cqh) * var(--pos-y));
+    display: flex;
+    flex-direction: column;
+    white-space: nowrap;
+    padding: var(--s2) var(--s1) 0;
+    font-size: var(--text-sm);
+    font-weight: 650;
+    font-stretch: 105%;
+    line-height: 1.2;
+    color: var(--ink);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 0.25em;
+    translate: 0 -100%;
+  }
+  .pin::after { content: ''; width: 1px; height: var(--lead, 40px); margin-top: var(--s2); background: currentColor; }
+  .pin--serum { --u: 0.2; --v: 0.745; --lead: 30px; flex-direction: column-reverse; align-items: flex-start; translate: 0 0; padding: 0 var(--s1) var(--s2); color: var(--mist); }
+  .pin--serum::after { margin: 0 0 var(--s2); }
+  .pin--cream { --u: 0.905; --v: 0.585; --lead: calc(0.22 * var(--ih)); align-items: flex-end; translate: -100% -100%; }
+  .pin:hover { text-decoration-thickness: 2px; }
+  .hero__plate .credit { right: var(--gutter); bottom: 15%; }
+
+  /* ---------- Foot ---------- */
+  .hero__foot { position: relative; z-index: 2; display: grid; gap: var(--s4); margin-top: calc(-1 * var(--s6)); color: var(--mist); }
+  .hero__sub { font-size: var(--text-lg); line-height: 1.35; }
+  .hero__sub strong { font-weight: 650; }
+  .hero__pct { color: var(--blush); }
+  .hero__foot :global(.btn) { width: 100%; }
+
+  /* ---------- The load sequence ---------- */
+  @media (prefers-reduced-motion: no-preference) {
+    .hero__stage { animation: resolve 800ms var(--ease-out) both; }
+    .hero__still--drop { animation: drop-arrive 800ms var(--ease-out) 400ms both, drop-float 9s var(--ease-in-out) 1.2s infinite alternate; }
+    .hero__still--cream { animation: cream-arrive 800ms var(--ease-out) 500ms both, cream-breathe 7s var(--ease-in-out) 1.3s infinite alternate; }
+    .hero__light { animation: light-pass 9s var(--ease-in-out) 400ms infinite; }
+    .hero__line { animation: line-in 700ms var(--ease-out) both; }
+    .hero__line.t-wide { animation-delay: 700ms; }
+    .hero__line--2 { animation-delay: 820ms; }
+    .pin { animation: fade-in 700ms var(--ease-out) 1200ms both; }
+    .hero__foot { animation: settle 600ms var(--ease-out) 900ms both; }
+    @supports (animation-timeline: scroll()) {
+      .hero__plate { animation: plate-scroll linear both; animation-timeline: scroll(root); animation-range: 0 100vh; }
+    }
+  }
+  /* Reduced motion: the same order of appearance, opacity only */
+  @media (prefers-reduced-motion: reduce) {
+    .hero__line, .hero__foot, .pin { animation: fade-in 1ms both; }
+  }
+  @keyframes resolve {
+    0%, 35% { filter: blur(10px) saturate(0.85); transform: scale(1.03); opacity: 0.75; }
+    100% { filter: blur(0) saturate(1); transform: none; opacity: 1; }
+  }
+  @keyframes drop-arrive { from { transform: translateY(1.2%) scale(1.012); } }
+  @keyframes drop-float { to { transform: translateY(-0.45%) scale(1.004); } }
+  @keyframes cream-arrive { from { transform: scale(1.02); } }
+  @keyframes cream-breathe { to { transform: scale(1.012); } }
+  @keyframes light-pass {
+    0% { opacity: 0; background-position: 130% 0; }
+    3% { opacity: 1; }
+    11% { opacity: 1; background-position: -30% 0; }
+    13%, 100% { opacity: 0; background-position: -30% 0; }
+  }
+  @keyframes line-in { from { opacity: 0; transform: translateY(0.3em); clip-path: inset(0 0 100% 0); } to { clip-path: inset(0 0 -20% 0); } }
+  @keyframes settle { from { opacity: 0; transform: translateY(12px); } }
+  @keyframes plate-scroll { to { translate: 0 8%; } }
+
+  /* ---------- Desktop: line and offer on the mist left, the plate right ---------- */
+  @media (min-width: 900px) {
+    .hero { background: var(--mist); }
+    .hero__content {
+      max-width: calc(var(--max) + 2 * var(--gutter));
+      margin-inline: auto;
+      min-height: min(calc(100vh - 72px), 820px);
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-rows: 1fr auto;
+      column-gap: var(--s7);
+      padding-bottom: var(--s8);
+    }
+    .hero__title { grid-column: 1; grid-row: 1; align-self: end; margin-top: 0; }
+    .hero__line.t-wide,
+    .hero__line--2 .t-wide { font-size: clamp(2.75rem, 4.2vw, 4.5rem); }
+    .hero__line--2 .t-black { font-size: clamp(4rem, 6.6vw, 7rem); }
+    .hero__foot { grid-column: 1; grid-row: 2; margin-top: var(--s6); color: var(--ink); justify-items: start; }
+    .hero__pct { color: var(--blue); }
+    .hero__foot :global(.btn) { width: auto; min-width: 18rem; --bg: var(--ink); --fg: var(--mist); --fill: var(--blue); --fill-fg: var(--mist); }
+    .hero__plate { grid-column: 2; grid-row: 1 / -1; height: auto; align-self: stretch; margin: 0 calc(-1 * var(--gutter)) calc(-1 * var(--s8)) 0; --pos-y: 0.6; }
+    .hero__still--cream, .hero__film {
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18%);
+      mask-image: linear-gradient(90deg, transparent 0, #000 18%);
+    }
+    .hero__still--drop, .hero__light {
+      -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 18%, #000 calc(var(--seam) - 36px), transparent calc(var(--seam) + 20px));
+      mask-image: linear-gradient(90deg, transparent 0, #000 18%, #000 calc(var(--seam) - 36px), transparent calc(var(--seam) + 20px));
+    }
+    .hero__plate .credit { bottom: var(--s5); }
+  }
+</style>

@@ -1,0 +1,45 @@
+---
+import '@fontsource-variable/archivo/wdth.css';
+import '../styles/global.css';
+import archivo from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
+import CartDrawer from '../components/CartDrawer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Skip-link target and label for this page */
+  skip?: { href: string; label: string };
+  noindex?: boolean;
+}
+const { title, description, skip = { href: '#main', label: 'Skip to content' }, noindex = false } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+---
+<!doctype html>
+<html lang="en-IN" id="top">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+    <meta name="theme-color" content="#f0f4f8" />
+    <link rel="preload" href={archivo} as="font" type="font/woff2" crossorigin />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Noomi" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta name="twitter:card" content="summary_large_image" />
+  </head>
+  <body>
+    <a class="skip-link" href={skip.href}>{skip.label}</a>
+    <slot />
+    <CartDrawer />
+    <script>
+      import '../scripts/reveal';
+    </script>
+  </body>
+</html>

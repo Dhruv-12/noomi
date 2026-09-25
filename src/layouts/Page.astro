@@ -1,0 +1,19 @@
+---
+// Every page: the header, the page, the footer. `home` lets sections own their grounds.
+import Base from './Base.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Footer from '../components/Footer.astro';
+interface Props { title: string; description: string; noindex?: boolean; home?: boolean }
+const { title, description, noindex, home = false } = Astro.props;
+---
+<Base title={title} description={description} noindex={noindex}>
+  <SiteHeader intro={home} />
+  <main id="main" class:list={{ page: !home }} data-ground={home ? undefined : 'mist'}>
+    <slot />
+  </main>
+  <Footer />
+</Base>
+
+<style>
+  .page { min-height: 70svh; padding-bottom: var(--s9); }
+</style>

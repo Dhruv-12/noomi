@@ -1,0 +1,215 @@
+---
+// DRAFT, PENDING REVIEW BY INDIAN COUNSEL (see legal.reviewedByCounsel in src/content/business.ts).
+// Describes only processing the site actually performs today, plus processing
+// that will be required once orders go live, each marked as such. Do not add
+// a named provider here until it is actually integrated.
+import Legal from '../layouts/Legal.astro';
+import C from '../components/legal/C.astro';
+import Sub from '../components/legal/Sub.astro';
+import { business, commerce, legal } from '../content/business';
+
+const b = business;
+const sections = [
+  { id: 'glance', title: 'At a glance' },
+  { id: 'about', title: 'About this Policy' },
+  { id: 'collect', title: 'Personal data we collect' },
+  { id: 'purposes', title: 'Why we process personal data' },
+  { id: 'basis', title: 'Consent and legitimate uses' },
+  { id: 'sharing', title: 'Who we share personal data with' },
+  { id: 'cookies', title: 'Cookies and browser storage' },
+  { id: 'marketing', title: 'Communications and marketing' },
+  { id: 'children', title: 'Children' },
+  { id: 'retention', title: 'How long we keep personal data' },
+  { id: 'security', title: 'Security' },
+  { id: 'rights', title: 'Your rights' },
+  { id: 'transfers', title: 'Processing outside India' },
+  { id: 'grievance', title: 'Grievances and contact' },
+  { id: 'changes', title: 'Changes to this Policy' },
+  { id: 'law', title: 'Governing law' },
+];
+---
+<Legal
+  title="Privacy Policy · Noomi"
+  description="How Noomi collects, uses, shares and protects personal data."
+  soft="Privacy"
+  hard="Policy."
+  formalTitle="Privacy Policy for the Noomi website and online store"
+  effectiveDate={legal.privacyEffectiveDate}
+  sections={sections}
+>
+  <section id="glance" aria-labelledby="h-glance">
+    <h2 id="h-glance"><span class="n">1.</span> At a glance</h2>
+    <p>This summary is for convenience. The full Policy below governs.</p>
+    <ul class="sub">
+      <li><span class="sn">—</span><span>We collect what you give us when you place a pre-order: your name, contact details and delivery address.</span></li>
+      <li><span class="sn">—</span><span>Your cart is stored in your own browser for the current session. It is not sent to us until you check out.</span></li>
+      <li><span class="sn">—</span><span>This website does not currently use analytics tools, advertising pixels or tracking cookies.</span></li>
+      <li><span class="sn">—</span><span>Online payments are not yet live. When they are, payments will be handled by a payment provider ({commerce.paymentProvider}), and this Policy will name it.</span></li>
+      <li><span class="sn">—</span><span>You can ask to access, correct or erase your personal data, and withdraw consent, by writing to {b.privacyEmail}.</span></li>
+    </ul>
+  </section>
+
+  <section id="about" aria-labelledby="h-about">
+    <h2 id="h-about"><span class="n">2.</span> About this Policy</h2>
+    <C n="2.1"><p>This Privacy Policy (the “<strong>Policy</strong>”) explains how {b.legalEntityName}, having its registered office at {b.registeredAddress} (“<strong>Noomi</strong>”, “<strong>we</strong>”, “<strong>us</strong>” or “<strong>our</strong>”), collects, uses, stores, shares and otherwise processes personal data in connection with the Noomi website, its online store and related communications (together, the “<strong>Website</strong>”).</p></C>
+    <C n="2.2"><p>For the purposes of the Digital Personal Data Protection Act, 2023 (the “<strong>DPDP Act</strong>”) and the rules made under it, as and when in force, Noomi acts as the Data Fiduciary in respect of the personal data described in this Policy, and you are the Data Principal. Service providers that process personal data on our behalf act as Data Processors.</p></C>
+    <C n="2.3"><p>This Policy is intended to be read together with the Website’s <a href="/returns-refunds">Returns, Refunds, Replacements and Product-Damage Policy</a> and any other terms displayed at the point of purchase.</p></C>
+    <C n="2.4"><p>This Policy is provided for transparency. It does not, by itself, constitute a representation that any particular legal requirement has been satisfied, and it does not limit any right you have under applicable law.</p></C>
+  </section>
+
+  <section id="collect" aria-labelledby="h-collect">
+    <h2 id="h-collect"><span class="n">3.</span> Personal data we collect</h2>
+    <h3>Information you provide</h3>
+    <C n="3.1"><p><strong>Pre-orders.</strong> Orders placed on the Website are currently pre-orders: products are dispatched after launch. We collect the information described in clause 3.2 for a pre-order, as for any order.</p></C>
+    <C n="3.2"><p><strong>Orders and checkout.</strong> When you place an order we collect:</p>
+      <Sub items={[
+        'your name, email address and phone number;',
+        'your shipping address, city, state, postal code and country;',
+        'billing information, where it differs from your shipping details; and',
+        'order information, including the products, quantities, order value, order status, delivery status and related communications.',
+      ]} />
+    </C>
+    <C n="3.3"><p><strong>Payment-related information.</strong> Online payments are not yet enabled on the Website. When they are, payments will be processed by {commerce.paymentProvider}. We intend that card, UPI, net-banking and similar payment credentials be entered on, and processed by, that payment provider, and that Noomi receive only limited payment information, such as a transaction reference, payment status, amount and payment method type. This clause will be updated when a provider is integrated.</p></C>
+    <C n="3.4"><p><strong>Customer support.</strong> When you contact us by email, phone, WhatsApp or any other channel, we collect the content of your communication, your contact details and any information, photographs or videos you choose to provide, including in connection with a claim under our Returns, Refunds, Replacements and Product-Damage Policy.</p></C>
+    <C n="3.5"><p><strong>Other forms.</strong> Any other information you submit through a form on the Website.</p></C>
+
+    <h3>Information collected automatically</h3>
+    <C n="3.6"><p><strong>Device, browser and IP information.</strong> Like most websites, the servers that host the Website may automatically record technical information such as your IP address, browser type and version, device type, operating system, referring page, pages requested and the date and time of access. These records are kept by our hosting provider ({'[HOSTING PROVIDER — TBD]'}) for security, reliability and troubleshooting.</p></C>
+    <C n="3.7"><p><strong>Campaign attribution.</strong> The Website does not currently record campaign parameters or referring pages against your personal data. If we begin to, we will update this Policy first.</p></C>
+    <C n="3.8"><p><strong>Analytics and website usage.</strong> The Website does not currently use any analytics service, advertising pixel or session-recording tool. If we introduce one, we will update this Policy before doing so and, where required by applicable law, seek your consent.</p></C>
+    <C n="3.9"><p><strong>Cookies and browser storage.</strong> See section 7.</p></C>
+  </section>
+
+  <section id="purposes" aria-labelledby="h-purposes">
+    <h2 id="h-purposes"><span class="n">4.</span> Why we process personal data</h2>
+    <C n="4.1"><p>We process personal data only for the following purposes, and only to the extent reasonably necessary for them:</p>
+      <Sub items={[
+        '<strong>processing and fulfilling orders</strong>, including confirming, packing and dispatching them;',
+        '<strong>shipping and delivery</strong>, including sharing delivery details with logistics providers and providing tracking information;',
+        '<strong>payment processing</strong>, including enabling the payment provider to process your payment, and handling refunds;',
+        '<strong>order communications</strong>, such as order confirmations, dispatch and delivery updates, and service messages about your order;',
+        '<strong>customer support</strong>, including responding to queries and assessing claims about damaged, defective or incorrect products;',
+        '<strong>pre-order communications</strong>, such as confirming your pre-order and telling you its dispatch date;',
+        '<strong>fraud prevention and security</strong>, including detecting and preventing fraudulent orders, abusive claims and misuse of the Website;',
+        '<strong>website functionality</strong>, such as keeping your cart during your browsing session;',
+        '<strong>analytics</strong>, if introduced in future as described in clause 3.8 (none at present);',
+        '<strong>improving the Website and our products</strong>, using feedback and aggregated order and support information;',
+        '<strong>marketing communications</strong>, only where you have agreed to receive them (see section 8); and',
+        '<strong>legal and regulatory compliance</strong>, including tax, accounting, consumer-protection and record-keeping obligations, and responding to lawful requests from authorities.',
+      ]} />
+    </C>
+    <C n="4.2"><p>We will not process your personal data for a purpose that is materially different from those described above without informing you and, where required, obtaining your consent.</p></C>
+  </section>
+
+  <section id="basis" aria-labelledby="h-basis">
+    <h2 id="h-basis"><span class="n">5.</span> Consent and legitimate uses</h2>
+    <C n="5.1"><p><strong>Consent.</strong> We process personal data you provide on the basis of your consent, given when you submit a form or place an order, for the purposes described at that point and in this Policy.</p></C>
+    <C n="5.2"><p><strong>Legitimate uses.</strong> Where applicable law permits processing without consent for certain legitimate uses, including where you have voluntarily provided personal data for a specified purpose, or where processing is necessary to comply with law, we may rely on those grounds.</p></C>
+    <C n="5.3"><p><strong>Withdrawing consent.</strong> You may withdraw your consent at any time by writing to {b.privacyEmail}, or by using any unsubscribe or opt-out option in our messages. Withdrawal is as easy as giving consent. It does not affect processing carried out before withdrawal, and we may continue to process personal data where required or permitted by law (for example, to complete an order already placed or to keep tax records). If you withdraw consent needed to fulfil an order, we may be unable to complete that order.</p></C>
+  </section>
+
+  <section id="sharing" aria-labelledby="h-sharing">
+    <h2 id="h-sharing"><span class="n">6.</span> Who we share personal data with</h2>
+    <C n="6.1"><p>We do not sell your personal data. We share it only as described below, and only to the extent necessary for the relevant purpose.</p></C>
+    <C n="6.2"><p><strong>Service providers (Data Processors)</strong> that act on our instructions, which as the Website goes live may include:</p>
+      <Sub items={[
+        `<strong>payment processors</strong>: ${commerce.paymentProvider}, to process payments and refunds;`,
+        `<strong>logistics and shipping providers</strong>: ${commerce.logisticsProvider}, to deliver orders and handle returns we authorise;`,
+        '<strong>e-commerce infrastructure and hosting providers</strong>: [HOSTING PROVIDER — TBD] and [ORDER MANAGEMENT / E-COMMERCE PLATFORM — TBD], to run the Website and store order records;',
+        '<strong>email and messaging providers</strong>: [EMAIL / WHATSAPP SERVICE PROVIDER — TBD], to send order and pre-order messages; and',
+        '<strong>professional advisers</strong>, such as accountants, auditors and lawyers, under duties of confidentiality.',
+      ]} />
+      <p>We do not currently share personal data with analytics or advertising providers. If that changes, this Policy will be updated first.</p>
+    </C>
+    <C n="6.3"><p><strong>Authorities.</strong> We may disclose personal data where required by law, court order or a lawful request from a government or regulatory authority, or where reasonably necessary to protect the rights, safety or property of Noomi, our customers or others, including to prevent fraud.</p></C>
+    <C n="6.4"><p><strong>Business transfers.</strong> If Noomi’s business or assets are reorganised, merged or transferred, personal data may be transferred as part of that transaction, subject to this Policy and applicable law.</p></C>
+    <C n="6.5"><p>We require our service providers to process personal data only on our instructions and to protect it with reasonable security safeguards.</p></C>
+  </section>
+
+  <section id="cookies" aria-labelledby="h-cookies">
+    <h2 id="h-cookies"><span class="n">7.</span> Cookies and browser storage</h2>
+    <C n="7.1"><p><strong>Cookies.</strong> The Website does not currently set cookies for analytics, advertising or tracking.</p></C>
+    <C n="7.2"><p><strong>Session storage.</strong> The Website uses your browser’s session storage to remember the products and quantities in your cart while you browse. This information stays on your device, is not sent to us until you check out, and is deleted by your browser when the browsing session ends. It is strictly necessary for the cart to work.</p></C>
+    <C n="7.3"><p><strong>Third-party services.</strong> When a payment provider or other service is integrated, it may set its own cookies, for example for fraud prevention during payment. We will describe these in this Policy when they are introduced.</p></C>
+    <C n="7.4"><p>You can clear browser storage and cookies through your browser settings. Doing so will empty your cart.</p></C>
+  </section>
+
+  <section id="marketing" aria-labelledby="h-marketing">
+    <h2 id="h-marketing"><span class="n">8.</span> Communications and marketing</h2>
+    <C n="8.1"><p><strong>Pre-order messages.</strong> If you place a pre-order, we will contact you about it, including to confirm its dispatch date. These are service messages, not marketing.</p></C>
+    <C n="8.2"><p><strong>Order messages.</strong> If you place an order, we will send service messages about that order. These are not marketing.</p></C>
+    <C n="8.3"><p><strong>Marketing.</strong> We will send marketing communications only where you have agreed to receive them. You can opt out at any time using the option in the message or by writing to {b.privacyEmail}.</p></C>
+  </section>
+
+  <section id="children" aria-labelledby="h-children">
+    <h2 id="h-children"><span class="n">9.</span> Children</h2>
+    <C n="9.1"><p>Under the DPDP Act, a “child” is an individual who has not completed eighteen years of age. Where applicable law requires it, we will process a child’s personal data only with verifiable consent of the child’s parent or lawful guardian, and we will not undertake tracking, behavioural monitoring or targeted advertising directed at children.</p></C>
+    <C n="9.2"><p>[POLICY ON USERS UNDER 18, INCLUDING THE PARENTAL-CONSENT MECHANISM — TBD]. Until that mechanism is in place, if you are under eighteen, please do not submit personal data on the Website without your parent or guardian. If we learn that we have collected a child’s personal data without the required consent, we will take reasonable steps to delete it.</p></C>
+  </section>
+
+  <section id="retention" aria-labelledby="h-retention">
+    <h2 id="h-retention"><span class="n">10.</span> How long we keep personal data</h2>
+    <C n="10.1"><p>We keep personal data only for as long as reasonably necessary for the purposes for which it was collected, and thereafter only as required or permitted by law. In particular:</p>
+      <Sub items={[
+        'order, invoice and payment records: for the periods required under applicable tax, accounting and consumer-protection laws;',
+        'customer-support and claims records: for as long as needed to resolve the matter and any related dispute, subject to [RETENTION PERIOD — TBD]; and',
+        'hosting logs: for the period set by our hosting provider’s configuration, subject to [RETENTION PERIOD — TBD].',
+      ]} />
+    </C>
+    <C n="10.2"><p>When personal data is no longer required, we will delete it or anonymise it so that it can no longer identify you.</p></C>
+  </section>
+
+  <section id="security" aria-labelledby="h-security">
+    <h2 id="h-security"><span class="n">11.</span> Security</h2>
+    <C n="11.1"><p>We take reasonable security safeguards, including technical and organisational measures appropriate to the nature of the personal data, to protect it against unauthorised access, disclosure, alteration, loss and personal data breach. These include limiting access to personal data to people who need it, and choosing service providers that maintain appropriate safeguards.</p></C>
+    <C n="11.2"><p>No method of transmission or storage is completely secure. If a personal data breach occurs, we will act as required by applicable law, including notifying the relevant authority and affected individuals where required.</p></C>
+  </section>
+
+  <section id="rights" aria-labelledby="h-rights">
+    <h2 id="h-rights"><span class="n">12.</span> Your rights</h2>
+    <C n="12.1"><p>Subject to applicable law, you have the right to:</p>
+      <Sub items={[
+        'obtain a summary of the personal data we process about you and the processing activities undertaken;',
+        'obtain the identities of the Data Fiduciaries and Data Processors with whom your personal data has been shared, and a description of the data shared;',
+        'correct, complete or update inaccurate or incomplete personal data;',
+        'have your personal data erased where it is no longer necessary for the purpose for which it was processed, unless retention is required by law;',
+        'withdraw consent (see clause 5.3);',
+        'have your grievances redressed (see section 14); and',
+        'nominate another individual to exercise your rights in the event of your death or incapacity.',
+      ]} />
+    </C>
+    <C n="12.2"><p>To exercise any of these rights, write to {b.privacyEmail}. We may need to verify your identity before acting on a request, and we will respond within the timelines prescribed by applicable law.</p></C>
+    <C n="12.3"><p>If you are not satisfied with our response, you may be entitled to approach the Data Protection Board of India, once constituted and as provided under the DPDP Act, after exhausting our grievance redressal mechanism.</p></C>
+  </section>
+
+  <section id="transfers" aria-labelledby="h-transfers">
+    <h2 id="h-transfers"><span class="n">13.</span> Processing outside India</h2>
+    <C n="13.1"><p>Some of our service providers may store or process personal data outside India. Where that happens, we will do so only in accordance with applicable law, including any restrictions notified by the Government of India, and we will require appropriate safeguards from those providers.</p></C>
+  </section>
+
+  <section id="grievance" aria-labelledby="h-grievance">
+    <h2 id="h-grievance"><span class="n">14.</span> Grievances and contact</h2>
+    <C n="14.1"><p>If you have a question, request or complaint about this Policy or how we process your personal data, please contact us. We will acknowledge and address grievances within the timelines prescribed by applicable law.</p>
+      <address>
+        <span><strong>{b.legalEntityName}</strong></span>
+        <span>{b.registeredAddress}</span>
+        <span>Grievance Officer: {b.grievanceOfficerName}</span>
+        <span>Privacy requests: {b.privacyEmail}</span>
+        <span>Grievances: {b.grievanceEmail}</span>
+        <span>Phone: {b.phone}</span>
+        <span>GSTIN: {b.gstin}</span>
+      </address>
+    </C>
+  </section>
+
+  <section id="changes" aria-labelledby="h-changes">
+    <h2 id="h-changes"><span class="n">15.</span> Changes to this Policy</h2>
+    <C n="15.1"><p>We may update this Policy from time to time, including when we introduce new services such as payment processing or analytics. We will publish the updated Policy on this page with a new effective date and, where the change is material or where required by law, notify you or seek your consent.</p></C>
+  </section>
+
+  <section id="law" aria-labelledby="h-law">
+    <h2 id="h-law"><span class="n">16.</span> Governing law</h2>
+    <C n="16.1"><p>This Policy is governed by the laws of India, including the Digital Personal Data Protection Act, 2023 and the rules made under it as and when in force, the Information Technology Act, 2000 and the rules made under it (including, to the extent applicable, the Information Technology (Reasonable Security Practices and Procedures and Sensitive Personal Data or Information) Rules, 2011), and the Consumer Protection Act, 2019 and the Consumer Protection (E-Commerce) Rules, 2020, each as amended from time to time.</p></C>
+    <C n="16.2"><p>Subject to any mandatory provision of applicable law, courts at {b.jurisdiction} shall have jurisdiction over any dispute arising out of this Policy. Nothing in this clause limits your right to approach any authority, forum or body available to you under applicable law.</p></C>
+  </section>
+</Legal>

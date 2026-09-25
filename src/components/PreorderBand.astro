@@ -1,0 +1,31 @@
+---
+import Button from './Button.astro';
+import { PREORDER_PCT } from '../lib/pricing';
+---
+<section class="band" data-ground="blue" aria-labelledby="band-title">
+  <div class="wrap band__inner">
+    <h2 id="band-title" class="band__title">
+      <span class="t-wide" data-reveal="mask">Found us early.</span>
+      <span class="t-black" data-reveal="mask" style="--d:100ms">Take {PREORDER_PCT}% off.</span>
+    </h2>
+    <Button href="#products" variant="on-blue">Pre-order</Button>
+    <span class="sticker band__sticker" style="--tilt:12deg" aria-hidden="true">early<br />bird</span>
+  </div>
+</section>
+
+<style>
+  .band { padding-block: var(--s9); overflow: clip; }
+  .band__inner { position: relative; display: grid; gap: var(--s6); justify-items: start; }
+  .band__title { display: grid; }
+  .band__title .t-wide { font-size: clamp(2.25rem, 10vw, 4.5rem); color: var(--powder); }
+  .band__title .t-black { font-size: clamp(3.25rem, 15.5vw, 9rem); line-height: 0.9; }
+  .band__inner :global(.btn) { width: 100%; }
+  .band__sticker { position: absolute; right: 0; top: calc(-1 * var(--s8)); --sticker: 72px; }
+
+  @media (min-width: 900px) {
+    .band { padding-block: var(--s10); }
+    .band__inner { grid-template-columns: 1fr auto; align-items: end; column-gap: var(--s8); }
+    .band__inner :global(.btn) { width: auto; min-width: 20rem; margin-bottom: var(--s3); }
+    .band__sticker { right: auto; left: min(62%, 48rem); top: calc(-1 * var(--s3)); --sticker: 96px; font-size: 0.9375rem; }
+  }
+</style>

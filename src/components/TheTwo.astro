@@ -1,0 +1,104 @@
+---
+// "Which one are you opening?" The gel and the cream, side by side; each half
+// of the picture is that product's door. Hovering one leans the photo toward
+// it and dims the other; a tap presses.
+import { Picture } from 'astro:assets';
+import { world } from '../content/media';
+import { products } from '../content/site';
+import Arrow from './Arrow.astro';
+const [serum, cream] = products;
+---
+<section id="products" class="two" aria-labelledby="two-title">
+  <h2 id="two-title" class="wrap two__title">
+    <span class="t-wide" data-reveal="mask">Which one are you</span>
+    <span class="t-black" data-reveal="mask" style="--d:100ms">opening?</span>
+  </h2>
+
+  <div class="two__img">
+    <div class="two__pan" data-drift>
+      <div class="two__lean">
+        <Picture src={world.textures.src} widths={[640, 1200, 1680]} sizes="(min-width: 900px) 100vw, 160vw" formats={['avif', 'webp']} alt={world.textures.alt} data-temp-art />
+      </div>
+    </div>
+    <a class="two__half two__half--serum" href={`/products/${serum.slug}`}>
+      <span class="two__label"><span class="two__n">01</span><span class="two__name">{serum.name}</span><Arrow /></span>
+    </a>
+    <a class="two__half two__half--cream" href={`/products/${cream.slug}`}>
+      <span class="two__label"><span class="two__n">02</span><span class="two__name">{cream.name}</span><Arrow /></span>
+    </a>
+    <span class="credit credit--ink">Mood image, not the formulas</span>
+  </div>
+</section>
+
+<style>
+  .two { padding-top: var(--s8); background: var(--ink); color: var(--mist); scroll-margin-top: 60px; }
+  .two__title { display: grid; margin-bottom: var(--s6); }
+  .two__title .t-wide { font-size: clamp(2rem, 9vw, 4.5rem); color: var(--powder); }
+  .two__title .t-black { font-size: clamp(4rem, 21vw, 10rem); color: var(--lavender); line-height: 0.85; }
+
+  .two__img { position: relative; aspect-ratio: 1 / 1; overflow: hidden; }
+  .two__pan, .two__lean { position: absolute; inset: 0; }
+  .two__lean { transition: transform 900ms var(--ease-out); }
+  .two__lean :global(img) { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Each half of the picture is a door */
+  .two__half {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 50%;
+    display: flex;
+    align-items: flex-end;
+    padding: var(--s5) var(--s3);
+    color: var(--ink);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .two__half--serum { left: 0; padding-left: var(--gutter); }
+  .two__half--cream { right: 0; justify-content: flex-end; padding-right: var(--gutter); }
+  /* the veil that falls on the half you're not looking at */
+  .two__half::before { content: ''; position: absolute; inset: 0; background: var(--ink); opacity: 0; transition: opacity 600ms var(--ease-out); pointer-events: none; }
+
+  .two__label {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s2);
+    min-height: 48px;
+    padding: var(--s2) var(--s3);
+    background: var(--mist);
+    font-size: var(--text-sm);
+    font-weight: 650;
+    font-stretch: 105%;
+    line-height: 1.15;
+    box-shadow: 0 10px 24px -14px color-mix(in srgb, var(--ink) 70%, transparent);
+    transition: background-color 400ms var(--ease-out), transform 500ms var(--ease-out);
+  }
+  .two__n { font-stretch: var(--tight); font-weight: 800; font-size: 1.5rem; line-height: 1; color: var(--blue); }
+  .two__name { max-width: 8.5ch; }
+  .two__label :global(.arrow) { flex: none; width: 1em; height: 1em; transition: transform 400ms var(--ease-out); }
+
+  @media (hover: hover) {
+    .two:has(.two__half--serum:hover) .two__lean { transform: scale(1.07) translateX(4%); }
+    .two:has(.two__half--cream:hover) .two__lean { transform: scale(1.07) translateX(-4%); }
+    .two:has(.two__half--serum:hover) .two__half--cream::before,
+    .two:has(.two__half--cream:hover) .two__half--serum::before { opacity: 0.45; }
+    .two__half:hover .two__label { background: var(--blush); transform: translateY(-6px) scale(1.04); }
+    .two__half:hover .two__label :global(.arrow) { transform: translateX(4px); }
+  }
+  .two__half:active .two__label { transform: scale(0.96); background: var(--blush); transition-duration: 120ms; }
+  .two__half:focus-visible { outline: 2px solid var(--mist); outline-offset: -8px; }
+  .two__half:focus-visible .two__label { background: var(--blush); }
+  .two__img .credit { top: var(--s3); bottom: auto; }
+
+  @media (min-width: 900px) {
+    .two { padding-top: var(--s10); }
+    .two__title { margin-bottom: var(--s8); }
+    .two__title .t-black { font-size: clamp(7rem, 13vw, 12rem); }
+    .two__img { aspect-ratio: 16 / 9; max-height: 90vh; }
+    .two__half { padding-bottom: var(--s7); }
+    .two__label { font-size: var(--text-lg); padding: var(--s3) var(--s5); }
+    .two__name { max-width: none; }
+    .two__n { font-size: 2rem; }
+  }
+</style>

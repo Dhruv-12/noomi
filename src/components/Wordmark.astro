@@ -1,0 +1,47 @@
+---
+// THE ONLY PLACE THE NOOMI LOGO IS REFERENCED.
+//
+// Source today: a high-resolution raster (3720px) derived from the only
+// supplied master, brand/noomi-logo.jpeg. It is NOT a vector. It is used as
+// an alpha mask, so the exact geometry takes a colour from its ground:
+//   tone="mark"  the supplied navy #011E54, on light grounds (default)
+//   tone="light" Mist, the light version for dark and photographic grounds
+//
+// When the vector master arrives: drop the SVG into src/assets/brand/ and
+// change the import below. Size, colour and animation all follow from it.
+import logo from '../assets/brand/noomi-wordmark.png';
+
+interface Props { class?: string; tone?: 'mark' | 'light'; intro?: boolean; label?: string | null }
+const { class: className, tone = 'mark', intro = false, label = 'noomi' } = Astro.props;
+---
+<span
+  class:list={['wordmark', `wordmark--${tone}`, { 'wordmark--intro': intro }, className]}
+  style={`--logo:url('${logo.src}');aspect-ratio:${logo.width} / ${logo.height}`}
+  role={label ? 'img' : undefined}
+  aria-label={label ?? undefined}
+  aria-hidden={label ? undefined : 'true'}
+>
+  <span class="wordmark__fill"></span>
+</span>
+
+<style>
+  .wordmark { position: relative; display: block; color: #011e54; }
+  .wordmark--light { color: var(--mist); }
+
+  .wordmark__fill {
+    position: absolute;
+    inset: 0;
+    background: currentColor;
+    -webkit-mask: var(--logo) 0 0 / 100% 100% no-repeat;
+    mask: var(--logo) 0 0 / 100% 100% no-repeat;
+  }
+
+  /* Intro: the whole mark rises through its own baseline. Never scaled. */
+  .wordmark--intro { clip-path: inset(-20% -2% 0 -2%); }
+  .wordmark--intro .wordmark__fill { animation: mark-rise 1300ms var(--ease-out) 150ms both; }
+  @keyframes mark-rise { from { transform: translateY(105%); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .wordmark--intro .wordmark__fill { animation: none; }
+  }
+</style>

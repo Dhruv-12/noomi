@@ -1,0 +1,110 @@
+---
+import Arrow from './Arrow.astro';
+interface Props {
+  href?: string;
+  type?: 'submit' | 'button';
+  /** Ground the button sits on decides its colours */
+  variant?: 'on-dark' | 'on-light' | 'on-blue';
+  class?: string;
+  [key: string]: unknown;
+}
+const { href, type = 'button', variant = 'on-light', class: className, ...rest } = Astro.props;
+const Tag = href ? 'a' : 'button';
+---
+<Tag
+  class:list={['btn', `btn--${variant}`, className]}
+  href={href}
+  type={href ? undefined : type}
+  data-btn
+  {...rest}
+>
+  <span class="btn__fill" aria-hidden="true"></span>
+  <span class="btn__label"><slot /></span>
+  <span class="btn__icon" aria-hidden="true"><Arrow /><Arrow /></span>
+</Tag>
+
+<script>
+  // The fill blooms from wherever the pointer enters, and drains back out
+  // the same way. Pure CSS handles the rest; keyboard focus blooms from centre.
+  const set = (e: PointerEvent) => {
+    const el = e.currentTarget as HTMLElement;
+    const r = el.getBoundingClientRect();
+    el.style.setProperty('--x', `${e.clientX - r.left}px`);
+    el.style.setProperty('--y', `${e.clientY - r.top}px`);
+  };
+  document.querySelectorAll<HTMLElement>('[data-btn]').forEach((b) => {
+    b.addEventListener('pointerenter', set);
+    b.addEventListener('pointerleave', set);
+    b.addEventListener('pointerdown', set);
+  });
+</script>
+
+<style>
+  .btn {
+    --bg: var(--ink);
+    --fg: var(--mist);
+    --fill: var(--blue);
+    --fill-fg: var(--mist);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--s6);
+    min-height: 60px;
+    padding: 0 var(--s5) 0 var(--s6);
+    border: 0;
+    border-radius: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-size: var(--text-lg);
+    font-weight: 650;
+    font-stretch: 105%;
+    letter-spacing: -0.005em;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 420ms var(--ease-out), transform 300ms var(--ease-out);
+    -webkit-tap-highlight-color: transparent;
+  }
+  .btn--on-dark { --bg: var(--mist); --fg: var(--ink); --fill: var(--calm); --fill-fg: var(--ink); }
+  .btn--on-blue { --bg: var(--mist); --fg: var(--blue); --fill: var(--ink); --fill-fg: var(--mist); }
+
+  .btn__fill {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: var(--fill);
+    clip-path: circle(0% at var(--x, 50%) var(--y, 50%));
+    transition: clip-path 700ms var(--ease-out);
+  }
+  .btn:hover,
+  .btn:focus-visible { color: var(--fill-fg); }
+  .btn:hover .btn__fill,
+  .btn:focus-visible .btn__fill { clip-path: circle(150% at var(--x, 50%) var(--y, 50%)); }
+  .btn:active { transform: scale(0.985); }
+  .btn:focus-visible { outline-offset: 4px; }
+
+  .btn__icon {
+    position: relative;
+    display: grid;
+    width: 1.3em;
+    height: 1.3em;
+    overflow: hidden;
+  }
+  .btn__icon :global(.arrow) {
+    grid-area: 1 / 1;
+    width: 100%;
+    height: 100%;
+    transition: transform 520ms var(--ease-out);
+  }
+  .btn__icon :global(.arrow:last-child) { transform: translateX(-120%); }
+  .btn:hover .btn__icon :global(.arrow:first-child),
+  .btn:focus-visible .btn__icon :global(.arrow:first-child) { transform: translateX(120%); }
+  .btn:hover .btn__icon :global(.arrow:last-child),
+  .btn:focus-visible .btn__icon :global(.arrow:last-child) { transform: none; }
+
+  .btn[aria-disabled='true'] { cursor: progress; }
+  .btn[aria-disabled='true'] .btn__fill { clip-path: circle(150% at 0% 50%); animation: pulse 1.2s var(--ease-in-out) infinite; }
+  @keyframes pulse { 50% { opacity: 0.6; } }
+</style>

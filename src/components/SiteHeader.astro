@@ -1,0 +1,139 @@
+---
+// The one header, on every page: the mark home, the three destinations, the cart.
+// Phones: mark · Menu · Cart, with the destinations in a panel under the bar.
+import Wordmark from './Wordmark.astro';
+import CartButton from './CartButton.astro';
+import { products } from '../content/site';
+
+interface Props { intro?: boolean }
+const { intro = false } = Astro.props;
+const path = Astro.url.pathname.replace(/\/$/, '') || '/';
+const links = [
+  { href: '/', label: 'Home' },
+  ...products.map((p) => ({ href: `/products/${p.slug}`, label: p.name })),
+];
+const current = (href: string) => (href === path ? 'page' : undefined);
+---
+<header class="hdr" data-hdr>
+  <div class="wrap hdr__bar">
+    <a class="hdr__home" href="/" aria-label="Noomi, home"><Wordmark intro={intro} label={null} /></a>
+
+    <nav class="hdr__nav" aria-label="Main">
+      <ul>
+        {links.map((l) => <li><a href={l.href} aria-current={current(l.href)}>{l.label}</a></li>)}
+      </ul>
+    </nav>
+
+    <div class="hdr__actions">
+      <button type="button" class="hdr__menu" aria-expanded="false" aria-controls="hdr-panel" data-menu>
+        <span class="hdr__menu-word">Menu</span>
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false"><path class="l1" d="M4 9h16" /><path class="l2" d="M4 15h16" /></svg>
+      </button>
+      <CartButton />
+    </div>
+  </div>
+
+  <nav class="hdr__panel" id="hdr-panel" aria-label="Main menu" hidden data-panel>
+    <ul class="wrap">
+      {links.map((l) => <li><a href={l.href} aria-current={current(l.href)}>{l.label}</a></li>)}
+      <li><a href="/cart">Cart</a></li>
+    </ul>
+  </nav>
+</header>
+
+<script>
+  const hdr = document.querySelector<HTMLElement>('[data-hdr]');
+  const btn = hdr?.querySelector<HTMLButtonElement>('[data-menu]');
+  const panel = hdr?.querySelector<HTMLElement>('[data-panel]');
+  if (hdr && btn && panel) {
+    const set = (open: boolean) => {
+      btn.setAttribute('aria-expanded', String(open));
+      panel.hidden = !open;
+      hdr.classList.toggle('is-open', open);
+    };
+    btn.addEventListener('click', () => set(btn.getAttribute('aria-expanded') !== 'true'));
+    panel.addEventListener('click', (e) => { if ((e.target as HTMLElement).closest('a')) set(false); });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && btn.getAttribute('aria-expanded') === 'true') { set(false); btn.focus(); }
+    });
+    matchMedia('(min-width: 900px)').addEventListener('change', (m) => { if (m.matches) set(false); });
+  }
+</script>
+
+<style>
+  .hdr {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    padding-top: env(safe-area-inset-top);
+    background: var(--mist);
+    color: var(--ink);
+    box-shadow: 0 1px 0 color-mix(in srgb, var(--ink) 10%, transparent);
+  }
+  .hdr__bar {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: var(--s5);
+    min-height: 60px;
+  }
+  .hdr__home { display: block; width: clamp(96px, 26vw, 116px); padding-block: var(--s2); }
+
+  .hdr__nav { display: none; }
+  .hdr__actions { grid-column: 3; display: flex; align-items: center; gap: var(--s1); }
+
+  .hdr__menu {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s2);
+    min-height: 44px;
+    padding: 0 var(--s2);
+    border: 0;
+    background: none;
+    color: inherit;
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .hdr__menu svg { fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: square; }
+  .hdr__menu path { transition: transform 300ms var(--ease-out); transform-origin: 12px 12px; }
+  .hdr.is-open .l1 { transform: translateY(3px) rotate(45deg); }
+  .hdr.is-open .l2 { transform: translateY(-3px) rotate(-45deg); }
+
+  /* Phone panel: the destinations as hairline rows under the bar */
+  .hdr__panel { border-top: 1px solid color-mix(in srgb, var(--ink) 10%, transparent); }
+  .hdr__panel ul { display: grid; padding-block: var(--s2) var(--s5); }
+  .hdr__panel a {
+    display: flex;
+    align-items: center;
+    min-height: 56px;
+    font-stretch: var(--wide);
+    font-weight: 300;
+    font-size: 1.5rem;
+    letter-spacing: -0.03em;
+    text-decoration: none;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  }
+  .hdr__panel a[aria-current='page'] { color: var(--blue); }
+
+  @media (min-width: 900px) {
+    .hdr__bar { min-height: 72px; column-gap: var(--s8); }
+    .hdr__home { width: 128px; }
+    .hdr__nav { display: block; }
+    .hdr__nav ul { display: flex; gap: var(--s6); }
+    .hdr__nav a {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+      font-size: var(--text-sm);
+      font-weight: 600;
+      text-decoration: none;
+      background: linear-gradient(currentColor, currentColor) 0 calc(100% - 8px) / 0% 1px no-repeat;
+      transition: background-size 400ms var(--ease-out);
+    }
+    .hdr__nav a:hover, .hdr__nav a[aria-current='page'] { background-size: 100% 1px; }
+    .hdr__menu, .hdr__panel { display: none; }
+  }
+</style>

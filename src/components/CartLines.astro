@@ -1,0 +1,56 @@
+---
+// An editable list of cart lines, rendered client-side from the cart store.
+// `name` pairs the list with its template (several lists can share a page).
+import Stepper from './Stepper.astro';
+interface Props { name: string }
+const { name } = Astro.props;
+---
+<ul class="lines" data-cart-lines={name} aria-label="Items in your cart"></ul>
+<template data-line-tpl={name}>
+  <li class="line">
+    <img class="line__img" data-f="img" alt="" width="64" height="80" />
+    <div class="line__main">
+      <p class="line__name" data-f="name"></p>
+      <p class="line__meta"><span data-when="size"><span data-f="size"></span><span aria-hidden="true"> · </span></span><span data-f="unit"></span></p>
+      <div class="line__row">
+        <Stepper line />
+        <button type="button" class="line__remove" data-act="remove">Remove</button>
+      </div>
+    </div>
+    <p class="line__total"><span class="visually-hidden">Line total </span><span data-f="total"></span></p>
+  </li>
+</template>
+
+<style>
+  .lines { display: grid; }
+  .lines :global(.line) {
+    display: grid;
+    grid-template-columns: 64px minmax(0, 1fr);
+    grid-template-areas: 'img main' 'img total';
+    column-gap: var(--s4);
+    row-gap: var(--s2);
+    padding-block: var(--s5);
+    border-top: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+  }
+  .lines :global(.line:last-child) { border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent); }
+  .lines :global(.line__img:not([src])) { visibility: hidden; }
+  .lines :global(.line__img) { grid-area: img; width: 64px; height: 80px; object-fit: cover; background: var(--mist-soft); }
+  .lines :global(.line__main) { grid-area: main; display: grid; gap: var(--s1); min-width: 0; }
+  .lines :global(.line__name) { font-stretch: var(--wide); font-weight: 300; font-size: 1.25rem; line-height: 1.15; letter-spacing: -0.03em; }
+  .lines :global(.line__meta) { font-size: var(--text-sm); color: var(--line-soft, var(--ink-soft)); }
+  .lines :global(.line__row) { display: flex; align-items: center; gap: var(--s4); margin-top: var(--s3); }
+  .lines :global(.line__remove) {
+    min-height: 44px;
+    padding: 0;
+    border: 0;
+    background: none;
+    color: inherit;
+    font-size: var(--text-sm);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 0.3em;
+    text-decoration-thickness: 1px;
+    cursor: pointer;
+  }
+  .lines :global(.line__total) { grid-area: total; font-weight: 650; font-variant-numeric: tabular-nums; }
+</style>

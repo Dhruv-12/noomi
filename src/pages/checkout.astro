@@ -1,0 +1,329 @@
+---
+import Page from '../layouts/Page.astro';
+import Button from '../components/Button.astro';
+import Arrow from '../components/Arrow.astro';
+import { commerce, pending } from '../content/business';
+import { PREORDER_PCT } from '../lib/pricing';
+
+// States and Union Territories of India, for the delivery address.
+const regions = [
+  'Andaman and Nicobar Islands', 'Andhra Pradesh', 'Arunachal Pradesh', 'Assam', 'Bihar', 'Chandigarh',
+  'Chhattisgarh', 'Dadra and Nagar Haveli and Daman and Diu', 'Delhi', 'Goa', 'Gujarat', 'Haryana',
+  'Himachal Pradesh', 'Jammu and Kashmir', 'Jharkhand', 'Karnataka', 'Kerala', 'Ladakh', 'Lakshadweep',
+  'Madhya Pradesh', 'Maharashtra', 'Manipur', 'Meghalaya', 'Mizoram', 'Nagaland', 'Odisha', 'Puducherry',
+  'Punjab', 'Rajasthan', 'Sikkim', 'Tamil Nadu', 'Telangana', 'Tripura', 'Uttar Pradesh', 'Uttarakhand', 'West Bengal',
+];
+---
+<Page title="Pre-order checkout · Noomi" description="Checkout for your Noomi pre-order." noindex>
+  <div class="wrap co">
+    <header class="co__head">
+      <a class="co__back" href="/cart"><Arrow class="co__back-arrow" /> Back to cart</a>
+      <h1 class="co__title t-wide">Pre-order</h1>
+      <p class="co__pre"><strong>{PREORDER_PCT}% off pre-orders.</strong> Your order ships after launch; we’ll confirm the date before you pay.</p>
+    </header>
+
+    <noscript><p class="co__nojs">Checkout needs JavaScript to work. Please enable it and reload this page.</p></noscript>
+
+    <!-- Empty cart -->
+    <div class="co__empty" data-cart-empty hidden>
+      <p class="co__empty-line t-wide">Your cart is empty.</p>
+      <a class="co__link" href="/#products">Shop the two <Arrow /></a>
+    </div>
+
+    <div class="co__grid" data-cart-filled hidden>
+      <!-- Summary: collapsible on phones, a sticky column on desktop -->
+      <aside class="sum" aria-labelledby="sum-title">
+        <details class="sum__box" data-sum>
+          <summary class="sum__summary">
+            <span id="sum-title" class="sum__label">Order summary</span>
+            <span class="sum__meta"><span data-cart-items-label>0 items</span> · <span data-cart-subtotal></span></span>
+          </summary>
+          <ul class="sum__lines" data-cart-lines="summary" aria-label="Items in your order"></ul>
+          <template data-line-tpl="summary">
+            <li class="sum__line">
+              <span class="sum__name"><span data-f="name"></span> <span class="sum__qty">× <span data-f="qty"></span></span></span>
+              <span class="sum__amt" data-f="total"></span>
+            </li>
+          </template>
+          <dl class="sum__totals">
+            <div><dt>Subtotal</dt><dd data-cart-subtotal></dd></div>
+            <div class="sum__disc"><dt>Pre-order discount · {PREORDER_PCT}%</dt><dd data-cart-discount>−{PREORDER_PCT}%</dd></div>
+            <div><dt>Shipping</dt><dd>{pending.toConfirm}</dd></div>
+            <div><dt>Tax</dt><dd>{pending.toConfirm}</dd></div>
+            <!-- The total is only shown once prices, shipping and tax rules exist; it is never estimated. -->
+            <div class="sum__total"><dt>Total</dt><dd data-cart-total>{pending.toConfirm}</dd></div>
+          </dl>
+          <a class="sum__edit" href="/cart">Edit cart</a>
+        </details>
+      </aside>
+
+      <form class="form" data-checkout novalidate>
+        <fieldset class="group">
+          <legend class="group__title"><span class="group__n">1</span> Contact</legend>
+          <div class="f">
+            <label class="f__label" for="co-name">Full name</label>
+            <input class="f__input" id="co-name" name="name" autocomplete="name" autocapitalize="words" maxlength="80" required aria-describedby="co-name-err" />
+            <p class="f__err" id="co-name-err" hidden></p>
+          </div>
+          <div class="f">
+            <label class="f__label" for="co-email">Email</label>
+            <input class="f__input" id="co-email" name="email" type="email" autocomplete="email" autocapitalize="off" spellcheck="false" required aria-describedby="co-email-err" />
+            <p class="f__err" id="co-email-err" hidden></p>
+          </div>
+          <div class="f">
+            <label class="f__label" for="co-phone">Phone</label>
+            <div class="f__row">
+              <span class="f__prefix" aria-hidden="true">+91</span>
+              <input class="f__input" id="co-phone" name="phone" type="tel" inputmode="numeric" autocomplete="tel-national" maxlength="16" required aria-describedby="co-phone-hint co-phone-err" />
+            </div>
+            <p class="f__hint" id="co-phone-hint">For delivery updates about this order.</p>
+            <p class="f__err" id="co-phone-err" hidden></p>
+          </div>
+        </fieldset>
+
+        <fieldset class="group">
+          <legend class="group__title"><span class="group__n">2</span> Delivery</legend>
+          <div class="f">
+            <label class="f__label" for="co-a1">Address</label>
+            <input class="f__input" id="co-a1" name="address1" autocomplete="address-line1" maxlength="120" required aria-describedby="co-a1-err" />
+            <p class="f__err" id="co-a1-err" hidden></p>
+          </div>
+          <div class="f">
+            <label class="f__label" for="co-a2">Apartment, floor, landmark <span class="f__opt">optional</span></label>
+            <input class="f__input" id="co-a2" name="address2" autocomplete="address-line2" maxlength="120" />
+          </div>
+          <div class="f__pair">
+            <div class="f">
+              <label class="f__label" for="co-city">City</label>
+              <input class="f__input" id="co-city" name="city" autocomplete="address-level2" maxlength="60" required aria-describedby="co-city-err" />
+              <p class="f__err" id="co-city-err" hidden></p>
+            </div>
+            <div class="f">
+              <label class="f__label" for="co-pin">PIN code</label>
+              <input class="f__input" id="co-pin" name="postalCode" inputmode="numeric" autocomplete="postal-code" maxlength="6" required aria-describedby="co-pin-err" />
+              <p class="f__err" id="co-pin-err" hidden></p>
+            </div>
+          </div>
+          <div class="f">
+            <label class="f__label" for="co-state">State or Union Territory</label>
+            <select class="f__input f__select" id="co-state" name="state" autocomplete="address-level1" required aria-describedby="co-state-err">
+              <option value="">Choose…</option>
+              {regions.map((r) => <option>{r}</option>)}
+            </select>
+            <p class="f__err" id="co-state-err" hidden></p>
+          </div>
+          <div class="f">
+            <label class="f__label" for="co-country">Country</label>
+            <select class="f__input f__select" id="co-country" name="country" autocomplete="country-name" required>
+              {commerce.shippingCountries.map((c) => <option>{c}</option>)}
+            </select>
+          </div>
+        </fieldset>
+
+        <fieldset class="group">
+          <legend class="group__title"><span class="group__n">3</span> Payment</legend>
+          <div class="pay">
+            <p class="pay__provider">Secure online payment</p>
+            <p class="pay__note">
+              Online payments aren’t connected yet. When they are, you’ll pay on the payment provider’s secure page;
+              Noomi won’t see or store your card or UPI details.
+            </p>
+          </div>
+        </fieldset>
+
+        <div class="place">
+          <Button type="submit" variant="on-light" data-place>Place pre-order</Button>
+          <p class="place__status" data-status role="status" aria-live="polite"></p>
+          <p class="place__terms">
+            By placing a pre-order you agree to our <a href="/returns-refunds">Returns &amp; Refunds Policy</a> and{' '}
+            <a href="/privacy-policy">Privacy Policy</a>.
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</Page>
+
+<script>
+  import { cart } from '../lib/cart';
+  import { startPayment, type CheckoutCustomer } from '../lib/payment';
+  import { normaliseIndianMobile, isEmail } from '../lib/validate';
+
+  const form = document.querySelector<HTMLFormElement>('[data-checkout]');
+  const sum = document.querySelector<HTMLDetailsElement>('[data-sum]');
+  if (sum && matchMedia('(min-width: 900px)').matches) sum.open = true;
+
+  if (form) {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const place = form.querySelector<HTMLButtonElement>('[data-place]')!;
+    const field = (name: string) => form.elements.namedItem(name) as HTMLInputElement | HTMLSelectElement;
+    const val = (name: string) => field(name).value.trim();
+    let attempted = false;
+    let busy = false;
+
+    type Rule = [name: string, check: (v: string) => string | null];
+    const rules: Rule[] = [
+      ['name', (v) => (v.length < 2 ? 'Add your full name.' : null)],
+      ['email', (v) => (!v ? 'Add your email address.' : !isEmail(v) ? 'That email looks incomplete. Check it and try again.' : null)],
+      ['phone', (v) => (!v ? 'Add a phone number for delivery updates.' : !normaliseIndianMobile(v) ? 'Use a 10-digit Indian mobile number.' : null)],
+      ['address1', (v) => (!v ? 'Add the delivery address.' : null)],
+      ['city', (v) => (!v ? 'Add the city.' : null)],
+      ['postalCode', (v) => (!v ? 'Add the PIN code.' : !/^[1-9]\d{5}$/.test(v) ? 'A PIN code is 6 digits and doesn’t start with 0.' : null)],
+      ['state', (v) => (!v ? 'Choose a state or Union Territory.' : null)],
+    ];
+
+    const show = (name: string, msg: string | null) => {
+      const el = field(name);
+      const err = document.getElementById(`${el.id}-err`);
+      if (err) { err.textContent = msg ?? ''; err.hidden = !msg; }
+      el.toggleAttribute('aria-invalid', !!msg);
+    };
+    const validate = () => {
+      let first: HTMLElement | null = null;
+      for (const [name, check] of rules) {
+        const msg = check(val(name));
+        show(name, msg);
+        if (msg && !first) first = field(name);
+      }
+      return first;
+    };
+
+    // After the first attempt, errors clear as they're fixed
+    form.addEventListener('input', (e) => {
+      if (!attempted) return;
+      const name = (e.target as HTMLInputElement).name;
+      const rule = rules.find(([n]) => n === name);
+      if (rule) show(name, rule[1](val(name)));
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (busy) return;
+      attempted = true;
+      status.textContent = '';
+      const first = validate();
+      if (first) { first.focus(); return; }
+      if (cart.count() === 0) return;
+
+      busy = true;
+      place.setAttribute('aria-disabled', 'true');
+      const customer: CheckoutCustomer = {
+        name: val('name'), email: val('email').toLowerCase(), phone: `+91${normaliseIndianMobile(val('phone'))}`,
+        address1: val('address1'), address2: val('address2'), city: val('city'),
+        state: val('state'), postalCode: val('postalCode'), country: val('country'),
+      };
+      const lines = cart.resolved().map((l) => ({ id: l.id, sku: l.product.sku, qty: l.qty }));
+      const result = await startPayment({ lines, customer }, cart.totals().subtotal !== null);
+      busy = false;
+      place.removeAttribute('aria-disabled');
+
+      // Honest outcomes only: nothing here ever reports a completed payment.
+      if (result.ok) {
+        status.textContent = 'Opening the secure payment page…';
+      } else if (result.reason === 'not-configured') {
+        status.textContent = 'Pre-orders can’t be placed yet: online payment isn’t switched on. Nothing has been charged, and your cart is saved.';
+      } else if (result.reason === 'prices-missing') {
+        status.textContent = 'Prices aren’t set yet, so this pre-order can’t be placed. Nothing has been charged.';
+      } else {
+        status.textContent = 'The payment page couldn’t open. Nothing has been charged. Please try again.';
+      }
+    });
+  }
+</script>
+
+<style>
+  .co { padding-top: var(--s6); }
+  .co__head { display: grid; gap: var(--s3); margin-bottom: var(--s6); }
+  .co__back { display: inline-flex; align-items: center; gap: var(--s2); min-height: 44px; justify-self: start; font-size: var(--text-sm); font-weight: 600; text-decoration: none; }
+  .co__back :global(.co__back-arrow) { transform: scaleX(-1); width: 1.1em; height: 1.1em; }
+  .co__title { font-size: clamp(2rem, 9vw, 3.5rem); }
+  .co__pre { max-width: 46ch; font-size: var(--text-sm); color: var(--ink-soft); }
+  .co__pre strong { color: var(--blue); font-weight: 650; }
+
+  .co__nojs { margin-bottom: var(--s6); font-weight: 600; }
+  .co__empty { display: grid; gap: var(--s4); justify-items: start; padding-block: var(--s6) var(--s9); }
+  .co__empty-line { font-size: clamp(2rem, 9vw, 3rem); }
+  .co__link { display: inline-flex; align-items: center; gap: var(--s2); min-height: 44px; font-size: var(--text-lg); font-weight: 650; text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 calc(100% - 6px) / 100% 2px no-repeat; }
+
+  .co__grid { display: grid; gap: var(--s7); }
+
+  /* ---------- Summary ---------- */
+  .sum__box { border-block: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .sum__summary {
+    display: flex; align-items: center; justify-content: space-between; gap: var(--s4);
+    min-height: 56px; cursor: pointer; list-style: none;
+  }
+  .sum__summary::-webkit-details-marker { display: none; }
+  .sum__label { font-weight: 650; display: inline-flex; align-items: center; gap: var(--s3); }
+  .sum__label::after {
+    content: ''; width: 9px; height: 9px;
+    border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+    transform: translateY(-2px) rotate(45deg); transition: transform 300ms var(--ease-out);
+  }
+  .sum__box[open] .sum__label::after { transform: translateY(2px) rotate(-135deg); }
+  .sum__meta { font-size: var(--text-sm); color: var(--ink-soft); text-align: right; font-variant-numeric: tabular-nums; }
+  .sum__lines { display: grid; gap: var(--s3); padding-block: var(--s3) var(--s4); }
+  .sum__lines :global(.sum__line) { display: flex; justify-content: space-between; gap: var(--s4); }
+  .sum__lines :global(.sum__qty) { color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .sum__lines :global(.sum__amt) { font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; }
+  .sum__totals { display: grid; gap: var(--s2); padding-block: var(--s4); border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .sum__totals div { display: flex; justify-content: space-between; gap: var(--s4); font-size: var(--text-sm); }
+  .sum__totals dd { text-align: right; font-variant-numeric: tabular-nums; color: var(--ink-soft); }
+  .sum__totals .sum__disc dt, .sum__totals .sum__disc dd { color: var(--blue); font-weight: 600; }
+  .sum__totals .sum__total { padding-top: var(--s3); font-size: var(--text-md); font-weight: 650; }
+  .sum__totals .sum__total dd { color: var(--ink); }
+  .sum__edit { display: inline-flex; align-items: center; min-height: 44px; margin-bottom: var(--s2); font-size: var(--text-sm); font-weight: 600; }
+
+  /* ---------- Form ---------- */
+  .form { display: grid; gap: var(--s8); }
+  .group { display: grid; gap: var(--s5); }
+  .group__title { display: flex; align-items: baseline; gap: var(--s3); margin-bottom: var(--s2); padding: 0; font-stretch: var(--wide); font-weight: 300; font-size: clamp(1.625rem, 7vw, 2rem); letter-spacing: -0.03em; }
+  .group__n { font-stretch: var(--tight); font-weight: 800; color: var(--blue); }
+
+  .f { display: grid; gap: var(--s1); min-width: 0; }
+  .f__label { font-size: var(--text-xs); font-weight: 600; font-stretch: 112%; letter-spacing: 0.01em; }
+  .f__opt { font-weight: 500; color: var(--ink-soft); }
+  .f__row { display: flex; align-items: baseline; gap: var(--s3); border-bottom: 1px solid color-mix(in srgb, var(--ink) 35%, transparent); }
+  .f__row:focus-within { border-color: var(--blue); box-shadow: 0 1px 0 var(--blue); }
+  .f__prefix { font-size: 1.25rem; font-weight: 500; color: var(--ink-soft); }
+  .f__input {
+    width: 100%; min-width: 0; min-height: 52px; padding: 0;
+    border: 0; border-bottom: 1px solid color-mix(in srgb, var(--ink) 35%, transparent); border-radius: 0;
+    background: transparent; color: var(--ink);
+    font-size: 1.25rem; font-weight: 500; outline: none;
+    transition: border-color 300ms var(--ease-out);
+  }
+  .f__row .f__input { border-bottom: 0; }
+  .f__input:focus { border-color: var(--blue); box-shadow: 0 1px 0 var(--blue); }
+  .f__row .f__input:focus { box-shadow: none; }
+  .f__input[aria-invalid] { border-color: var(--blue); box-shadow: 0 1px 0 var(--blue); }
+  .f__row:has([aria-invalid]) { border-color: var(--blue); box-shadow: 0 1px 0 var(--blue); }
+  .f__select {
+    appearance: none; -webkit-appearance: none; cursor: pointer; padding-right: 28px;
+    background: linear-gradient(45deg, transparent 50%, currentColor 50%) calc(100% - 12px) 55% / 6px 6px no-repeat,
+                linear-gradient(-45deg, transparent 50%, currentColor 50%) calc(100% - 6px) 55% / 6px 6px no-repeat;
+  }
+  .f__hint { font-size: var(--text-sm); color: var(--ink-soft); }
+  .f__err { font-size: var(--text-sm); font-weight: 600; color: var(--blue); }
+  .f__pair { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: var(--s4); }
+
+  .pay { display: grid; gap: var(--s2); padding: var(--s5) 0; border-block: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .pay__provider { font-weight: 650; }
+  .pay__note { font-size: var(--text-sm); color: var(--ink-soft); max-width: 46ch; }
+
+  .place { display: grid; gap: var(--s4); }
+  .place :global(.btn) { width: 100%; }
+  .place__status:empty { display: none; }
+  .place__status { padding-top: var(--s3); border-top: 2px solid var(--blue); font-weight: 600; }
+  .place__terms { font-size: var(--text-sm); color: var(--ink-soft); }
+
+  @media (min-width: 900px) {
+    .co { padding-top: var(--s8); }
+    .co__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 24rem); column-gap: var(--s10); align-items: start; }
+    .sum { grid-column: 2; grid-row: 1; position: sticky; top: 92px; }
+    .sum__summary { pointer-events: none; }
+    .sum__label::after { display: none; }
+    .form { grid-column: 1; grid-row: 1; max-width: 36rem; }
+    .place :global(.btn) { width: auto; min-width: 20rem; justify-self: start; }
+  }
+</style>

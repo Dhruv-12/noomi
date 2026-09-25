@@ -1,0 +1,42 @@
+---
+// Edited for real life: one campaign moment. A large portrait, a headline,
+// one line. The only motion is the shared one-time reveal on entry.
+import { Picture } from 'astro:assets';
+import { world } from '../content/media';
+---
+<section class="life" data-ground="mist" aria-labelledby="life-title">
+  <div class="life__inner">
+    <figure class="life__img" data-reveal="fade">
+      <Picture src={world.gettingReady.src} widths={[480, 800, 1136]} sizes="(min-width: 900px) 55vw, 100vw" formats={['avif', 'webp']} alt={world.gettingReady.alt} loading="lazy" data-temp-art />
+      <figcaption class="credit">Mood image</figcaption>
+    </figure>
+    <div class="life__copy">
+      <h2 id="life-title" class="life__title">
+        <span class="t-wide" data-reveal="mask">Edited for</span>{' '}
+        <span class="t-black" data-reveal="mask" style="--d:100ms">real life.</span>
+      </h2>
+      <p class="life__line" data-reveal="rise" style="--d:200ms"><span>Early class. Hot day.</span> <span>Late night. Still two.</span></p>
+    </div>
+  </div>
+</section>
+
+<style>
+  .life { overflow: clip; }
+  .life__inner { display: grid; }
+
+  .life__img { position: relative; aspect-ratio: 4 / 5; max-height: 88svh; overflow: hidden; }
+  .life__img :global(img) { width: 100%; height: 100%; object-fit: cover; object-position: 50% 25%; }
+
+  .life__copy { display: grid; gap: var(--s4); padding: var(--s7) var(--gutter) var(--s4); }
+  .life__title { display: grid; }
+  .life__title .t-wide { font-size: clamp(2.25rem, 10vw, 4.5rem); }
+  .life__title .t-black { font-size: clamp(3.5rem, 17vw, 8rem); color: var(--blue); }
+  .life__line span { display: block; }
+  .life__line { font-stretch: var(--wide); font-weight: 300; font-size: clamp(1.375rem, 6vw, 2rem); line-height: 1.2; letter-spacing: -0.03em; }
+
+  @media (min-width: 900px) {
+    .life__inner { grid-template-columns: minmax(0, 7fr) minmax(0, 5fr); align-items: center; min-height: min(92vh, 960px); }
+    .life__img { aspect-ratio: auto; height: 100%; max-height: none; }
+    .life__copy { padding: var(--s9) var(--gutter) var(--s9) var(--s9); }
+  }
+</style>

@@ -1,0 +1,51 @@
+---
+import Page from '../layouts/Page.astro';
+import { business } from '../content/business';
+
+// Only real details are shown; bracketed placeholders never reach customers.
+const real = (v: string) => (v.startsWith('[') ? null : v);
+const b = business;
+const rows = [
+  { k: 'Orders and claims', v: real(b.supportEmail), href: real(b.supportEmail) && `mailto:${b.supportEmail}`, sub: 'Damaged, defective or wrong item? See Returns & Refunds.', subHref: '/returns-refunds#claims' },
+  { k: 'Phone', v: real(b.phone), href: real(b.phone) && `tel:${b.phone.replace(/\s/g, '')}` },
+  { k: 'Privacy requests', v: real(b.privacyEmail), href: real(b.privacyEmail) && `mailto:${b.privacyEmail}`, sub: 'Access, correction, erasure or withdrawing consent.', subHref: '/privacy-policy#rights' },
+  { k: 'Grievance Officer', v: [real(b.grievanceOfficerName), real(b.grievanceEmail)].filter(Boolean).join(' · ') || null, href: real(b.grievanceEmail) && `mailto:${b.grievanceEmail}` },
+  { k: 'Registered office', v: [real(b.legalEntityName), real(b.registeredAddress), real(b.gstin) && `GSTIN ${b.gstin}`].filter(Boolean).join(', ') || null },
+].filter((r) => r.v);
+---
+<Page title="Contact · Noomi" description="How to reach Noomi about an order, a claim, your data or anything else.">
+  <div class="wrap contact">
+    <h1 class="contact__title">
+      <span class="t-wide">Talk</span>
+      <span class="t-black">to us.</span>
+    </h1>
+
+    {rows.length > 0 ? (
+      <dl class="contact__list">
+        {rows.map((r) => (
+          <div>
+            <dt>{r.k}</dt>
+            <dd>{r.href ? <a href={r.href}>{r.v}</a> : r.v}</dd>
+            {r.sub && <dd class="contact__sub"><a href={r.subHref}>{r.sub}</a></dd>}
+          </div>
+        ))}
+      </dl>
+    ) : (
+      <p class="contact__soon">Contact details are coming soon.</p>
+    )}
+  </div>
+</Page>
+
+<style>
+  .contact { padding-top: var(--s7); }
+  .contact__title { display: grid; margin-bottom: var(--s7); }
+  .contact__title .t-wide { font-size: clamp(2.5rem, 12vw, 4.5rem); }
+  .contact__title .t-black { font-size: clamp(3.5rem, 18vw, 7rem); color: var(--blue); }
+  .contact__soon { max-width: 30ch; font-stretch: var(--wide); font-weight: 300; font-size: clamp(1.375rem, 6vw, 1.875rem); letter-spacing: -0.03em; line-height: 1.2; }
+  .contact__list { display: grid; max-width: 40rem; }
+  .contact__list > div { display: grid; gap: var(--s1); padding-block: var(--s5); border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .contact__list > div:last-child { border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .contact__list dt { font-size: var(--text-xs); font-weight: 600; font-stretch: 112%; letter-spacing: 0.01em; color: var(--ink-soft); }
+  .contact__list dd { font-stretch: var(--wide); font-weight: 300; font-size: clamp(1.25rem, 5.4vw, 1.625rem); letter-spacing: -0.02em; overflow-wrap: anywhere; }
+  .contact__list .contact__sub { font-stretch: 100%; font-weight: 400; font-size: var(--text-sm); letter-spacing: 0; color: var(--ink-soft); margin-top: var(--s1); }
+</style>

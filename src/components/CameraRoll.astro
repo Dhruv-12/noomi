@@ -1,0 +1,74 @@
+---
+// Made to be touched: the Noomi camera roll. A tactile collage, captions of a
+// word or two. Mood, not product facts; every image is labelled a mood image.
+import { Picture } from 'astro:assets';
+import { world, productMedia } from '../content/media';
+const roll = [
+  { img: productMedia['calm-serum'].secondary, cap: 'one drop', tilt: -3, shape: 'tall' },
+  { img: world.monsoon, cap: 'after the rain', tilt: 2.5, shape: 'tall' },
+  { img: world.textures, cap: 'both, please', tilt: -1, shape: 'wide' },
+  { img: world.condensation, cap: '36° outside', tilt: 3, shape: 'tall' },
+  { img: world.portrait, cap: 'blue hour', tilt: -2, shape: 'tall' },
+  { img: productMedia['barrier-repair-cream'].secondary, cap: 'a little dab', tilt: 1.5, shape: 'tall' },
+];
+---
+<section class="roll" data-ground="ink" aria-labelledby="roll-title">
+  <div class="wrap roll__head">
+    <h2 id="roll-title" class="roll__title">
+      <span class="t-wide" data-reveal="mask">Made to be</span>
+      <span class="t-black" data-reveal="mask" style="--d:100ms">touched.</span>
+    </h2>
+    <p class="roll__count" aria-hidden="true">camera roll · {roll.length}</p>
+  </div>
+
+  <ul class="wrap roll__board" aria-label="Noomi camera roll">
+    {roll.map((r, i) => (
+      <li class:list={['roll__item', `roll__item--${r.shape}`]} style={`--tilt:${r.tilt}deg`} data-drift={i % 2 ? 'lift' : undefined}>
+        <figure>
+          <Picture src={r.img.src} widths={r.shape === 'wide' ? [640, 1100] : [320, 560]} sizes={r.shape === 'wide' ? '(min-width: 900px) 40vw, 90vw' : '(min-width: 900px) 20vw, 46vw'}
+            formats={['avif', 'webp']} alt={r.img.alt} loading="lazy" data-temp-art />
+          <figcaption>{r.cap}</figcaption>
+        </figure>
+      </li>
+    ))}
+  </ul>
+  <p class="wrap roll__credit">Mood images, not the formulas.</p>
+</section>
+
+<style>
+  .roll { padding-block: var(--s8); overflow: clip; }
+  .roll__head { display: flex; align-items: flex-end; justify-content: space-between; gap: var(--s4); margin-bottom: var(--s6); }
+  .roll__title { display: grid; }
+  .roll__title .t-wide { font-size: clamp(2.25rem, 10vw, 4.5rem); color: var(--powder); }
+  .roll__title .t-black { font-size: clamp(3.5rem, 17vw, 8rem); color: var(--lavender); }
+  .roll__count { padding-bottom: var(--s2); font-size: var(--text-xs); font-weight: 600; color: var(--mist-soft); white-space: nowrap; }
+
+  /* The board: two loose columns on phones, pinned photos overlapping a touch */
+  .roll__board { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s5) var(--s3); align-items: start; }
+  .roll__item:nth-child(even) { margin-top: var(--s7); }
+  .roll__item--wide { grid-column: 1 / -1; margin-inline: var(--s3); }
+  .roll__item figure {
+    display: grid;
+    gap: var(--s2);
+    padding: 6px 6px var(--s3);
+    background: var(--mist);
+    color: var(--ink);
+    rotate: var(--tilt);
+    box-shadow: 0 18px 34px -18px color-mix(in srgb, var(--ink) 90%, black);
+    transition: rotate 500ms var(--ease-out), translate 500ms var(--ease-out), scale 500ms var(--ease-out);
+  }
+  .roll__item :global(img) { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; }
+  .roll__item--wide :global(img) { aspect-ratio: 16 / 10; }
+  .roll__item figcaption { padding-inline: 2px; font-size: var(--text-sm); font-weight: 600; font-stretch: 105%; }
+  @media (hover: hover) { .roll__item figure:hover { rotate: 0deg; translate: 0 -6px; scale: 1.03; } }
+  .roll__item figure:active { rotate: 0deg; scale: 1.02; }
+  .roll__credit { margin-top: var(--s6); font-size: 0.625rem; color: var(--mist-soft); opacity: 0.8; }
+
+  @media (min-width: 900px) {
+    .roll { padding-block: var(--s10); }
+    .roll__head { margin-bottom: var(--s8); }
+    .roll__board { grid-template-columns: repeat(4, 1fr); gap: var(--s7) var(--s6); max-width: calc(var(--max) + 2 * var(--gutter)); }
+    .roll__item--wide { grid-column: span 2; margin: var(--s8) 0 0; }
+    .roll__item:nth-child(even) { margin-top: var(--s9); }
+  }
+</style>

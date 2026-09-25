@@ -1,0 +1,62 @@
+---
+// The full-page cart: same store and line list as the drawer. It is also the
+// no-JS destination of every "Cart" link.
+import Page from '../layouts/Page.astro';
+import CartLines from '../components/CartLines.astro';
+import CartTotals from '../components/CartTotals.astro';
+import Arrow from '../components/Arrow.astro';
+---
+<Page title="Cart · Noomi" description="Your Noomi cart." noindex>
+  <div class="wrap cartp">
+    <h1 class="cartp__title t-wide">Your cart</h1>
+
+    <noscript><p class="cartp__nojs">Your cart needs JavaScript to work. Please enable it and reload this page.</p></noscript>
+
+    <div class="cartp__empty" data-cart-empty>
+      <p class="cartp__empty-line t-wide">Nothing here yet.</p>
+      <a class="cartp__link" href="/#products">Shop the two <Arrow /></a>
+    </div>
+
+    <div class="cartp__grid" data-cart-filled hidden>
+      <div class="cartp__lines" data-cart-focus-fallback tabindex="-1">
+        <p class="cartp__count" data-cart-items-label>0 items</p>
+        <CartLines name="page" />
+      </div>
+      <div class="cartp__sum">
+        <CartTotals />
+        <a class="cartp__checkout" href="/checkout"><span>Continue to checkout</span><Arrow /></a>
+        <a class="cartp__keep" href="/#products">Keep browsing</a>
+      </div>
+    </div>
+  </div>
+</Page>
+
+<style>
+  .cartp { padding-top: var(--s6); }
+  .cartp__title { margin-bottom: var(--s5); font-size: clamp(2rem, 9vw, 3rem); }
+  .cartp__nojs { margin-bottom: var(--s5); font-weight: 600; }
+
+  .cartp__empty { display: grid; gap: var(--s4); justify-items: start; padding-bottom: var(--s8); }
+  .cartp__empty-line { font-size: clamp(2rem, 9vw, 3rem); }
+  .cartp__link { display: inline-flex; align-items: center; gap: var(--s2); min-height: 44px; font-size: var(--text-lg); font-weight: 650; text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 calc(100% - 6px) / 100% 2px no-repeat; }
+
+  .cartp__grid { display: grid; gap: var(--s7); }
+  .cartp__lines { outline: none; }
+  .cartp__count { margin-bottom: var(--s3); font-size: var(--text-sm); color: var(--ink-soft); }
+
+  .cartp__sum { display: grid; gap: var(--s4); }
+  .cartp__checkout {
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 60px; padding: 0 var(--s5) 0 var(--s6);
+    background: var(--ink); color: var(--mist);
+    font-size: var(--text-lg); font-weight: 650; font-stretch: 105%; text-decoration: none;
+    transition: background-color 400ms var(--ease-out);
+  }
+  .cartp__checkout:hover { background: var(--blue); }
+  .cartp__keep { justify-self: center; display: inline-flex; align-items: center; min-height: 44px; font-weight: 600; }
+
+  @media (min-width: 900px) {
+    .cartp__grid { grid-template-columns: minmax(0, 1fr) minmax(0, 22rem); column-gap: var(--s10); align-items: start; }
+    .cartp__sum { position: sticky; top: 92px; }
+  }
+</style>

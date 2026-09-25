@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "broken-image",
+        "value": "*",
+        "files": [
+          "src/components/CartLines.astro"
+        ],
+        "createdAt": "2026-09-24T08:33:14.666Z",
+        "reason": "Claude: <img> lives inside a <template>; cart-ui.ts sets src from the drawer's thumbnail map before insertion; CSS hides it if unset"
+      }
+    ]
+  }
+}

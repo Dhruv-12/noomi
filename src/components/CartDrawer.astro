@@ -1,0 +1,147 @@
+---
+import { getImage } from 'astro:assets';
+import CartLines from './CartLines.astro';
+import CartTotals from './CartTotals.astro';
+import Arrow from './Arrow.astro';
+import { products } from '../content/site';
+import { productMedia } from '../content/media';
+import { PREORDER_PCT } from '../lib/pricing';
+
+// Thumbnails come from the same media map as the product pages (mood images until packshots exist).
+const thumbs = await Promise.all(products.map(async (p) => ({
+  id: p.id,
+  src: (await getImage({ src: productMedia[p.id].primary.src, width: 192, format: 'webp' })).src,
+})));
+---
+<dialog class="drawer" data-cart-drawer aria-labelledby="drawer-title">
+  {thumbs.map((t) => <span hidden data-thumb={t.id} data-src={t.src}></span>)}
+  <div class="drawer__panel" data-cart-focus-fallback tabindex="-1">
+    <header class="drawer__head">
+      <h2 id="drawer-title" class="drawer__title t-wide">Your cart</h2>
+      <p class="drawer__count" data-cart-items-label>0 items</p>
+      <button type="button" class="drawer__close" data-cart-close aria-label="Close cart">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18" /></svg>
+      </button>
+    </header>
+
+    <div class="drawer__body">
+      <div class="drawer__empty" data-cart-empty>
+        <p class="drawer__empty-line t-wide">Nothing here yet.</p>
+        <p class="drawer__empty-sub">Two products, both on pre-order at {PREORDER_PCT}% off.</p>
+        <a class="drawer__link" href="/#products" data-cart-close>Shop the two <Arrow /></a>
+      </div>
+      <div data-cart-filled hidden>
+        <CartLines name="drawer" />
+      </div>
+    </div>
+
+    <footer class="drawer__foot" data-cart-filled hidden>
+      <CartTotals />
+      <a class="drawer__checkout" href="/checkout">
+        <span>Continue to checkout</span><Arrow />
+      </a>
+      <button type="button" class="drawer__keep" data-cart-close>Keep browsing</button>
+    </footer>
+  </div>
+</dialog>
+
+<script>
+  import '../scripts/cart-ui';
+</script>
+
+<style>
+  /* ---------- Shell: bottom sheet on phones, right panel on desktop ---------- */
+  .drawer {
+    position: fixed;
+    inset: auto 0 0 0;
+    width: 100%;
+    max-width: none;
+    height: min(92dvh, 760px);
+    max-height: none;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: var(--mist);
+    color: var(--ink);
+    overflow: hidden;
+  }
+  .drawer::backdrop { background: color-mix(in srgb, var(--ink) 55%, transparent); }
+  .drawer[open] { animation: sheet-in 420ms var(--ease-out); }
+  .drawer[open]::backdrop { animation: fade-in 420ms var(--ease-out); }
+  .drawer.is-closing { animation: sheet-out 280ms var(--ease-in-out) forwards; }
+  .drawer.is-closing::backdrop { animation: fade-out 280ms var(--ease-in-out) forwards; }
+  @keyframes sheet-in { from { transform: translateY(100%); } }
+  @keyframes sheet-out { to { transform: translateY(100%); } }
+  @keyframes fade-out { to { opacity: 0; } }
+  :global(html.has-drawer) { overflow: hidden; }
+
+  .drawer__panel {
+    height: 100%;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    outline: none;
+  }
+
+  .drawer__head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: end;
+    padding: var(--s5) var(--gutter) var(--s4);
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 14%, transparent);
+  }
+  .drawer__title { font-size: clamp(1.75rem, 8vw, 2.25rem); line-height: 1; }
+  .drawer__count { grid-column: 1; font-size: var(--text-sm); color: var(--ink-soft); margin-top: var(--s2); }
+  .drawer__close {
+    grid-column: 2; grid-row: 1 / span 2; align-self: start;
+    display: grid; place-items: center;
+    width: 44px; height: 44px; margin-right: -10px;
+    padding: 0; border: 0; background: none; color: inherit; cursor: pointer;
+  }
+  .drawer__close svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: square; }
+
+  .drawer__body { overflow-y: auto; overscroll-behavior: contain; padding: 0 var(--gutter) var(--s5); }
+
+  .drawer__empty { display: grid; gap: var(--s3); justify-items: start; padding-top: var(--s8); }
+  .drawer__empty-line { font-size: clamp(2rem, 9vw, 2.75rem); }
+  .drawer__empty-sub { color: var(--ink-soft); }
+  .drawer__link {
+    display: inline-flex; align-items: center; gap: var(--s2);
+    min-height: 44px; margin-top: var(--s3);
+    font-size: var(--text-lg); font-weight: 650; text-decoration: none;
+    background: linear-gradient(currentColor, currentColor) 0 calc(100% - 6px) / 100% 2px no-repeat;
+  }
+
+  .drawer__foot {
+    display: grid;
+    gap: var(--s4);
+    padding: var(--s5) var(--gutter) max(var(--s5), env(safe-area-inset-bottom));
+    background: var(--mist);
+    box-shadow: 0 -1px 0 color-mix(in srgb, var(--ink) 14%, transparent);
+  }
+
+  .drawer__checkout {
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 56px; padding: 0 var(--s5) 0 var(--s6);
+    background: var(--ink); color: var(--mist);
+    font-size: var(--text-lg); font-weight: 650; font-stretch: 105%; text-decoration: none;
+    transition: background-color 400ms var(--ease-out);
+  }
+  .drawer__checkout:hover { background: var(--blue); }
+  .drawer__checkout:active { transform: scale(0.99); }
+  .drawer__keep {
+    justify-self: center; min-height: 44px; padding: 0 var(--s4);
+    border: 0; background: none; color: inherit; font-weight: 600; cursor: pointer;
+  }
+
+  @media (min-width: 700px) {
+    .drawer { inset: 0 0 0 auto; width: min(460px, 100%); height: 100dvh; }
+    .drawer[open] { animation-name: panel-in; }
+    .drawer.is-closing { animation-name: panel-out; }
+  }
+  @keyframes panel-in { from { transform: translateX(100%); } }
+  @keyframes panel-out { to { transform: translateX(100%); } }
+
+  @media (prefers-reduced-motion: reduce) {
+    .drawer[open], .drawer.is-closing, .drawer[open]::backdrop, .drawer.is-closing::backdrop { animation: none; }
+  }
+</style>

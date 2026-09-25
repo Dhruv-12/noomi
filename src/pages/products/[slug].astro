@@ -1,0 +1,194 @@
+---
+import { Picture } from 'astro:assets';
+import Page from '../../layouts/Page.astro';
+import Button from '../../components/Button.astro';
+import Stepper from '../../components/Stepper.astro';
+import Arrow from '../../components/Arrow.astro';
+import { products, type Product } from '../../content/site';
+import { productMedia } from '../../content/media';
+import { pending } from '../../content/business';
+import { formatPrice } from '../../lib/money';
+import { preorderUnitPrice, PREORDER_PCT } from '../../lib/pricing';
+
+export function getStaticPaths() {
+  return products.map((p) => ({ params: { slug: p.slug }, props: { product: p } }));
+}
+
+interface Props { product: Product }
+const { product: p } = Astro.props;
+const m = productMedia[p.id];
+const other = products.find((o) => o.id !== p.id)!;
+const otherMedia = productMedia[other.id];
+const pre = preorderUnitPrice(p);
+const soldOut = p.availability === 'out_of_stock';
+const details = [
+  { title: 'Description', body: p.description ?? 'Full details coming soon.' },
+  { title: 'Ingredients', body: p.ingredients ?? 'The full ingredient list is coming soon.' },
+  { title: 'Size and texture', body: `Size: ${p.size ?? pending.soon}. Texture: ${p.texture ?? pending.soon}.` },
+  { title: 'How to use', body: p.metadata.usage ?? pending.soon + '.' },
+];
+---
+<Page title={`${p.name} · Noomi`} description={`${p.name} by Noomi. Pre-order now, ${PREORDER_PCT}% off.`}>
+  <nav class="wrap crumbs" aria-label="Breadcrumb">
+    <ol>
+      <li><a href="/">Home</a></li>
+      <li><a href={`/products/${p.slug}`} aria-current="page">{p.name}</a></li>
+    </ol>
+  </nav>
+
+  <article class="pdp" aria-labelledby="pdp-name">
+    <!-- Gallery: swipe on phones, stacked on desktop. Mood images until packshots exist. -->
+    <div class="pdp__gallery" role="group" aria-label={`${p.name} images`}>
+      {[m.primary, m.secondary].map((img, i) => (
+        <figure class="pdp__img">
+          <Picture src={img.src} widths={[480, 800, 1136]} sizes="(min-width: 900px) 50vw, 100vw" formats={['avif', 'webp']}
+            alt={img.alt} loading={i === 0 ? 'eager' : 'lazy'} data-temp-art />
+          {i === 0 && <span class="pdp__tag">Pre-order · {PREORDER_PCT}% off</span>}
+          <figcaption class="credit">Mood image, not the product</figcaption>
+        </figure>
+      ))}
+    </div>
+
+    <div class="pdp__info">
+      <div class="pdp__buy">
+        <h1 id="pdp-name" class="pdp__name t-wide">{p.name}</h1>
+        <p class="pdp__line">{p.line ?? p.tagline}</p>
+
+        <div class="pdp__price">
+          <p class="pdp__now">
+            <span class="visually-hidden">Pre-order price: </span>
+            {pre === null ? <span class="pdp__tbd">{pending.price}</span> : formatPrice(pre)}
+            {pre !== null && <s class="pdp__was"><span class="visually-hidden">Full price </span>{formatPrice(p.price)}</s>}
+          </p>
+          <p class="pdp__offer">Pre-order · {PREORDER_PCT}% off</p>
+        </div>
+
+        <div class="pdp__cta">
+          <Stepper for={p.id} name={p.name} />
+          <Button type="button" variant="on-light" data-add-to-cart={p.id} disabled={soldOut}>
+            {soldOut ? 'Sold out' : 'Pre-order'}
+          </Button>
+        </div>
+        <p class="pdp__ship">Ships after launch. We’ll confirm the date before you pay.</p>
+      </div>
+
+      <div class="pdp__details">
+        {details.map((d, i) => (
+          <details class="acc" open={i === 0}>
+            <summary class="acc__sum">{d.title}</summary>
+            <p class="acc__body">{d.body}</p>
+          </details>
+        ))}
+        <details class="acc">
+          <summary class="acc__sum">Pre-order and returns</summary>
+          <p class="acc__body">
+            This is a pre-order: it ships after launch, and we’ll confirm the date before you pay.
+            Damaged, defective or incorrect products are covered by our <a href="/returns-refunds">Returns &amp; Refunds Policy</a>.
+          </p>
+        </details>
+      </div>
+
+      <a class="pair" href={`/products/${other.slug}`}>
+        <Picture class="pair__img" src={otherMedia.primary.src} widths={[160, 240]} sizes="80px" formats={['avif', 'webp']} alt="" />
+        <span class="pair__text">
+          <span class="pair__k">The other half</span>
+          <span class="pair__name">{other.name}</span>
+        </span>
+        <Arrow class="pair__arrow" />
+      </a>
+    </div>
+  </article>
+</Page>
+
+<style>
+  .crumbs { padding-block: var(--s3); }
+  .crumbs ol { display: flex; flex-wrap: wrap; align-items: center; gap: var(--s2); font-size: var(--text-sm); }
+  .crumbs li + li::before { content: '/'; margin-right: var(--s2); color: var(--ink-soft); }
+  .crumbs a { display: inline-flex; align-items: center; min-height: 36px; text-decoration: none; color: var(--ink-soft); }
+  .crumbs a[aria-current] { color: var(--ink); font-weight: 600; }
+
+  .pdp { display: grid; gap: var(--s5); }
+
+  /* Gallery: a swipe strip on phones */
+  .pdp__gallery {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: 88%;
+    gap: var(--s2);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-inline: var(--gutter);
+    scroll-padding-inline: var(--gutter);
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  .pdp__gallery::-webkit-scrollbar { display: none; }
+  .pdp__img { position: relative; aspect-ratio: 4 / 5; overflow: hidden; scroll-snap-align: start; background: var(--depth); }
+  .pdp__img :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .pdp__tag {
+    position: absolute; left: var(--s3); top: var(--s3);
+    padding: 6px var(--s3);
+    background: var(--mist); color: var(--ink);
+    font-size: var(--text-xs); font-weight: 650; font-stretch: 105%;
+  }
+
+  .pdp__info { display: grid; gap: var(--s6); padding-inline: var(--gutter); }
+  .pdp__buy { display: grid; gap: var(--s3); }
+  .pdp__name { font-size: clamp(2rem, 9.4vw, 3.25rem); line-height: 1.02; text-wrap: balance; }
+  .pdp__line { font-size: var(--text-lg); line-height: 1.35; }
+
+  .pdp__price { display: grid; gap: 2px; margin-top: var(--s2); }
+  .pdp__now { display: flex; align-items: baseline; gap: var(--s3); font-size: 1.5rem; font-weight: 650; font-variant-numeric: tabular-nums; }
+  .pdp__tbd { font-size: var(--text-md); letter-spacing: 0.01em; }
+  .pdp__was { font-size: var(--text-md); font-weight: 500; color: var(--ink-soft); }
+  .pdp__offer { font-size: var(--text-sm); font-weight: 600; color: var(--blue); }
+
+  .pdp__cta { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: var(--s3); margin-top: var(--s3); }
+  .pdp__cta :global(.stepper) { --stepper-h: 60px; }
+  .pdp__cta :global(.btn) { width: 100%; }
+  .pdp__cta :global(.btn[disabled]) { opacity: 0.45; cursor: not-allowed; }
+  .pdp__ship { font-size: var(--text-sm); color: var(--ink-soft); }
+
+  /* Details */
+  .pdp__details { border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .acc { border-bottom: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .acc__sum {
+    display: flex; align-items: center; justify-content: space-between;
+    min-height: 56px; font-weight: 650; cursor: pointer; list-style: none;
+  }
+  .acc__sum::-webkit-details-marker { display: none; }
+  .acc__sum::after {
+    content: ''; width: 9px; height: 9px; margin-right: 4px;
+    border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+    transform: translateY(-3px) rotate(45deg); transition: transform 300ms var(--ease-out);
+  }
+  .acc[open] .acc__sum::after { transform: translateY(2px) rotate(-135deg); }
+  .acc__body { padding-bottom: var(--s5); max-width: 60ch; color: var(--ink-soft); }
+
+  /* The other product */
+  .pair {
+    display: grid; grid-template-columns: 64px minmax(0, 1fr) auto; align-items: center; gap: var(--s4);
+    padding: var(--s3) 0; text-decoration: none;
+  }
+  .pair :global(.pair__img) { width: 64px; height: 80px; object-fit: cover; }
+  .pair__text { display: grid; gap: 2px; }
+  .pair__k { font-size: var(--text-xs); font-weight: 600; font-stretch: 112%; color: var(--ink-soft); }
+  .pair__name { font-stretch: var(--wide); font-weight: 300; font-size: 1.375rem; letter-spacing: -0.03em; }
+  .pair :global(.pair__arrow) { transition: transform 400ms var(--ease-out); }
+  @media (hover: hover) { .pair:hover :global(.pair__arrow) { transform: translateX(4px); } }
+
+  @media (min-width: 900px) {
+    .crumbs { padding-block: var(--s5); }
+    .pdp {
+      max-width: calc(var(--max) + 2 * var(--gutter));
+      margin-inline: auto;
+      padding-inline: var(--gutter);
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      column-gap: var(--s9);
+      align-items: start;
+    }
+    .pdp__gallery { grid-auto-flow: row; grid-auto-columns: auto; overflow: visible; padding: 0; gap: var(--s3); }
+    .pdp__info { position: sticky; top: 96px; padding: 0; }
+    .pdp__cta :global(.btn) { min-width: 0; }
+  }
+</style>

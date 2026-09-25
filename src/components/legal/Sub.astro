@@ -1,0 +1,10 @@
+---
+// Lettered sub-clauses: (a), (b), (c)… or roman (i), (ii)…
+interface Props { items: string[]; roman?: boolean }
+const { items, roman = false } = Astro.props;
+const romans = ['i', 'ii', 'iii', 'iv', 'v', 'vi', 'vii', 'viii', 'ix', 'x', 'xi', 'xii', 'xiii', 'xiv', 'xv', 'xvi', 'xvii', 'xviii', 'xix', 'xx', 'xxi', 'xxii', 'xxiii', 'xxiv'];
+const label = (i: number) => `(${roman ? romans[i] : String.fromCharCode(97 + i)})`;
+---
+<ol class="sub">
+  {items.map((t, i) => <li><span class="sn">{label(i)}</span><span set:html={t} /></li>)}
+</ol>

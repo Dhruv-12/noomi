@@ -1,0 +1,159 @@
+---
+// One product, one screen: a dominant image, the name, one line, pre-order.
+// The details live on the product page. The serum is image-led on Blue; the
+// cream is type-led on Powder with the hand detail laid over the swirl.
+import { Picture } from 'astro:assets';
+import type { Product } from '../content/site';
+import { productMedia } from '../content/media';
+import { formatPrice } from '../lib/money';
+import { preorderUnitPrice, PREORDER_PCT } from '../lib/pricing';
+import Arrow from './Arrow.astro';
+
+interface Props { product: Product; variant: 'serum' | 'cream'; index: number; kicker: string; line: string }
+const { product: p, variant, index, kicker, line } = Astro.props;
+const m = productMedia[p.id];
+const pre = preorderUnitPrice(p);
+// Intentional breaks: one word per line, never clipped
+const words = p.name.split(' ');
+---
+<section class:list={['feat', `feat--${variant}`]} id={`home-${p.slug}`} data-ground={variant === 'serum' ? 'blue' : 'powder'} aria-labelledby={`feat-${p.id}`}>
+  <div class="wrap feat__inner">
+    <p class="feat__kicker" data-reveal="fade">0{index + 1} / {kicker}</p>
+    <h2 id={`feat-${p.id}`} class="feat__name">
+      <a href={`/products/${p.slug}`}>
+        {words.map((w, i) => <span class:list={['feat__w', i % 2 === 0 ? 't-black' : 't-wide']} data-reveal="mask" style={`--d:${i * 90}ms`}>{w}</span>)}
+      </a>
+    </h2>
+
+    <a class="feat__img" href={`/products/${p.slug}`} tabindex="-1" aria-hidden="true">
+      <span class="feat__frame" data-drift>
+        <Picture src={m.primary.src} widths={[480, 800, 1136]} sizes="(min-width: 900px) 50vw, 100vw" formats={['avif', 'webp']} alt="" data-temp-art />
+      </span>
+      <span class:list={['sticker', 'feat__sticker', { 'sticker--cool': variant === 'cream' }]}>{PREORDER_PCT}% off<br />pre-order</span>
+      <span class="credit">Mood image, not the formula</span>
+    </a>
+
+    {variant === 'cream' && (
+      <figure class="feat__detail" data-drift="lift">
+        <Picture src={m.secondary.src} widths={[320, 560]} sizes="(min-width: 900px) 20vw, 44vw" formats={['avif', 'webp']} alt={m.secondary.alt} data-temp-art />
+        <figcaption class="credit">Mood image</figcaption>
+      </figure>
+    )}
+
+    <div class="feat__copy">
+      <p class="feat__line" data-reveal="rise">{line}</p>
+      <p class="feat__offer">Pre-order · {PREORDER_PCT}% off{pre !== null && <> · {formatPrice(pre)} <s>{formatPrice(p.price)}</s></>}</p>
+      <div class="feat__ctas" data-reveal="rise" style="--d:100ms">
+        <button type="button" class="feat__buy" data-add-to-cart={p.id}><span class="btn__label">Pre-order</span></button>
+        <a class="feat__explore" href={`/products/${p.slug}`}>Explore <Arrow /></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .feat { padding-block: var(--s8); overflow: clip; }
+  .feat__inner { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .feat__kicker { grid-column: 1 / -1; margin-bottom: var(--s2); font-size: var(--text-xs); font-weight: 650; font-stretch: 112%; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  /* The name sizes itself from its own width, so no word can ever overflow */
+  .feat__name { grid-column: 1 / -1; position: relative; z-index: 2; container-type: inline-size; }
+  .feat__name a { display: grid; text-decoration: none; }
+  .feat__w.t-black { font-size: min(27cqi, 12rem); line-height: 0.86; }
+  .feat__w.t-wide { font-size: min(16cqi, 6.5rem); line-height: 1; }
+
+  .feat__img { position: relative; display: block; overflow: hidden; }
+  .feat__frame { display: block; height: 100%; }
+  .feat__img :global(img) { width: 100%; height: 100%; object-fit: cover; transition: transform 1200ms var(--ease-out); }
+  @media (hover: hover) { .feat__img:hover :global(img) { transform: scale(1.03); } }
+  .feat__sticker { position: absolute; z-index: 2; }
+
+  .feat__copy { grid-column: 1 / -1; position: relative; z-index: 2; display: grid; gap: var(--s3); }
+  .feat__line { font-stretch: var(--wide); font-weight: 300; font-size: clamp(1.75rem, 8vw, 2.75rem); line-height: 1.05; letter-spacing: -0.035em; }
+  .feat__offer { font-size: var(--text-sm); font-weight: 650; font-variant-numeric: tabular-nums; }
+  .feat__offer s { font-weight: 500; opacity: 0.7; }
+  .feat__ctas { display: flex; align-items: center; gap: var(--s5); margin-top: var(--s2); }
+  .feat__buy {
+    min-height: 56px;
+    padding: 0 var(--s7);
+    border: 0;
+    font: inherit;
+    font-size: var(--text-lg);
+    font-weight: 650;
+    font-stretch: 105%;
+    cursor: pointer;
+    transition: background-color 300ms var(--ease-out), color 300ms var(--ease-out), transform 200ms var(--ease-out);
+  }
+  .feat__buy:active { transform: scale(0.97); }
+  .feat__explore {
+    display: inline-flex; align-items: center; gap: var(--s2);
+    min-height: 44px;
+    font-weight: 650;
+    text-decoration: none;
+    background: linear-gradient(currentColor, currentColor) 0 calc(100% - 8px) / 100% 1.5px no-repeat;
+  }
+  .feat__explore :global(.arrow) { transition: transform 400ms var(--ease-out); }
+  .feat__explore:hover :global(.arrow) { transform: translateX(4px); }
+
+  /* ---------- Calm Serum: image-led, the name over a full-bleed photo ---------- */
+  .feat--serum .feat__w.t-wide { justify-self: end; margin-top: -0.12em; }
+  .feat--serum .feat__img {
+    grid-column: 1 / -1;
+    margin-inline: calc(-1 * var(--gutter));
+    margin-top: calc(-1 * clamp(3rem, 16vw, 7rem));
+    aspect-ratio: 4 / 5;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 16%, #000 78%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 16%, #000 78%, transparent);
+  }
+  .feat--serum .feat__sticker { right: var(--gutter); top: 24%; }
+  .feat--serum .feat__img .credit { left: var(--gutter); right: auto; top: 22%; bottom: auto; }
+  .feat--serum .feat__copy { margin-top: calc(-1 * var(--s8)); }
+  .feat--serum .feat__offer { color: var(--blush); }
+  .feat--serum .feat__buy { background: var(--mist); color: var(--blue); }
+  .feat--serum .feat__buy:hover { background: var(--blush); color: var(--ink); }
+
+  /* ---------- Barrier Repair Cream: type-led, the hand laid over the swirl ---------- */
+  .feat--cream .feat__w.t-wide { justify-self: end; color: var(--blue); margin-block: -0.04em; }
+  .feat--cream .feat__img {
+    grid-column: 2 / -1;
+    margin-right: calc(-1 * var(--gutter));
+    margin-top: calc(-1 * clamp(2rem, 12vw, 5rem));
+    aspect-ratio: 4 / 5;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 18%);
+    mask-image: linear-gradient(180deg, transparent, #000 18%);
+  }
+  .feat--cream .feat__sticker { right: var(--gutter); bottom: var(--s6); --tilt: 8deg; }
+  .feat--cream .feat__img .credit { left: var(--s3); right: auto; top: 30%; bottom: auto; color: var(--ink); }
+  .feat--cream .feat__detail {
+    grid-column: 1 / 4;
+    grid-row: 4;
+    position: relative;
+    z-index: 3;
+    margin-top: -45%;
+    margin-left: calc(-1 * var(--gutter));
+    aspect-ratio: 4 / 5;
+    overflow: hidden;
+    box-shadow: 0 30px 60px -30px color-mix(in srgb, var(--ink) 70%, transparent);
+  }
+  .feat--cream .feat__detail :global(img) { width: 100%; height: 100%; object-fit: cover; }
+  .feat--cream .feat__copy { grid-row: 5; margin-top: var(--s6); }
+  .feat--cream .feat__offer { color: var(--blue); }
+  .feat--cream .feat__buy { background: var(--ink); color: var(--mist); }
+  .feat--cream .feat__buy:hover { background: var(--blue); }
+
+  @media (min-width: 900px) {
+    .feat { padding-block: var(--s10); }
+    .feat__inner { grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--s5); }
+
+    .feat--serum .feat__kicker, .feat--serum .feat__name, .feat--serum .feat__copy { grid-column: 1 / 7; }
+    .feat--serum .feat__name { grid-row: 2; }
+    .feat--serum .feat__img { grid-column: 7 / -1; grid-row: 1 / span 4; margin: 0 calc(-1 * var(--gutter)) 0 0; }
+    .feat--serum .feat__copy { grid-row: 3; margin-top: var(--s7); }
+
+    .feat--cream .feat__kicker, .feat--cream .feat__name { grid-column: 7 / -1; }
+    .feat--cream .feat__img { grid-column: 1 / 6; grid-row: 1 / span 4; margin: 0 0 0 calc(-1 * var(--gutter)); }
+    .feat--cream .feat__detail { grid-column: 5 / 8; grid-row: 3 / span 2; margin: var(--s9) 0 0; }
+    .feat--cream .feat__copy { grid-row: 3; grid-column: 8 / -1; margin-top: var(--s7); }
+    .feat--cream .feat__w.t-wide { justify-self: start; margin-left: 0.2em; }
+  }
+</style>

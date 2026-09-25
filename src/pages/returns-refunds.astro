@@ -1,0 +1,456 @@
+---
+// DRAFT, PENDING REVIEW BY INDIAN COUNSEL familiar with consumer protection
+// law, e-commerce law, cosmetics/skincare regulation, data protection and D2C
+// contracts (see legal.reviewedByCounsel in src/content/business.ts).
+// Protective through definitions, procedure, investigation and product-
+// integrity provisions; never by excluding mandatory consumer rights.
+import Legal from '../layouts/Legal.astro';
+import C from '../components/legal/C.astro';
+import Sub from '../components/legal/Sub.astro';
+import { business, commerce, legal } from '../content/business';
+
+const b = business;
+const c = commerce;
+const sections = [
+  { id: 'definitions', title: 'Definitions and interpretation' },
+  { id: 'status', title: 'Status of this Policy and statutory rights' },
+  { id: 'position', title: 'General returns position' },
+  { id: 'claims', title: 'Damaged, defective, deficient or incorrect Products' },
+  { id: 'investigation', title: 'Verification and investigation' },
+  { id: 'eligibility', title: 'Eligibility and exclusions' },
+  { id: 'integrity', title: 'Hygiene and product integrity' },
+  { id: 'characteristics', title: 'Cosmetic product characteristics' },
+  { id: 'remedies', title: 'Remedies' },
+  { id: 'logistics', title: 'Return logistics' },
+  { id: 'calculation', title: 'Refund calculation' },
+  { id: 'promotions', title: 'Promotional and bundled Orders' },
+  { id: 'abuse', title: 'Fraudulent, abusive or repetitive Claims' },
+  { id: 'preservation', title: 'Preservation of statutory rights' },
+  { id: 'law', title: 'Applicable Law' },
+  { id: 'changes', title: 'Changes to this Policy' },
+  { id: 'disputes', title: 'Governing law and dispute resolution' },
+  { id: 'grievance', title: 'Grievance contact' },
+];
+---
+<Legal
+  title="Returns & Refunds · Noomi"
+  description="Noomi's Returns, Refunds, Replacements and Product-Damage Policy."
+  soft="Returns &"
+  hard="Refunds."
+  formalTitle="Returns, Refunds, Replacements and Product-Damage Policy"
+  effectiveDate={legal.returnsEffectiveDate}
+  sections={sections}
+>
+  <p>
+    <strong>In short:</strong> we cannot take back skincare that has simply been changed-of-mind, opened or used, because
+    it cannot safely be resold. If your order arrives damaged, defective, incorrect, or not as described, tell us within{' '}
+    {c.claimWindow} of delivery and we will put it right in accordance with this Policy and the law. Nothing in this Policy
+    removes any right you have under law. The full Policy below governs.
+  </p>
+
+  <!-- 1 -->
+  <section id="definitions" aria-labelledby="h-definitions">
+    <h2 id="h-definitions"><span class="n">1.</span> Definitions and interpretation</h2>
+    <C n="1.1"><p>In this Policy, unless the context otherwise requires, the following capitalised terms shall have the meanings set out below:</p>
+      <dl class="defs">
+        <dt>“Applicable Law”</dt>
+        <dd>means all laws, statutes, rules, regulations, notifications, orders and binding directions in force in India from time to time that apply to the relevant Order, Product or matter, including, to the extent applicable, the Consumer Protection Act, 2019 and the rules made thereunder (including the Consumer Protection (E-Commerce) Rules, 2020), laws governing the manufacture, labelling and sale of cosmetics, legal metrology laws, the Information Technology Act, 2000 and the Digital Personal Data Protection Act, 2023, each as amended.</dd>
+        <dt>“Business Day”</dt>
+        <dd>means a day other than a Saturday, Sunday or a public holiday at {b.jurisdiction}.</dd>
+        <dt>“Claim”</dt>
+        <dd>means a request made by a Customer under clause 4 in respect of a Product.</dd>
+        <dt>“Claim Window”</dt>
+        <dd>means the period of {c.claimWindow} from the Delivery Date, being the period within which Noomi requests that Claims be reported, as more fully described in clause 4.3.</dd>
+        <dt>“Company”, “Noomi”, “we”, “us” or “our”</dt>
+        <dd>means {b.legalEntityName}, having its registered office at {b.registeredAddress}, and includes its successors and permitted assigns.</dd>
+        <dt>“Consumer”</dt>
+        <dd>means a Customer who is a “consumer” within the meaning of the Consumer Protection Act, 2019.</dd>
+        <dt>“Customer” or “you”</dt>
+        <dd>means any person who places an Order on the Website.</dd>
+        <dt>“Damage”</dt>
+        <dd>means physical harm to a Product or its primary packaging occurring before or during Delivery, including breakage, cracking, crushing, puncture or Leakage, that impairs the Product’s condition, safety or usability.</dd>
+        <dt>“Defect”</dt>
+        <dd>means any fault, imperfection or shortcoming in the quality, quantity, potency, purity or standard of a Product which is required to be maintained under Applicable Law, under any contract, or as claimed by Noomi in any manner, and includes a malfunction of a pump, dropper, dispenser, closure or seal supplied with the Product.</dd>
+        <dt>“Deficiency”</dt>
+        <dd>means any fault, imperfection, shortcoming or inadequacy in the quality, nature or manner of performance of a service rendered by or on behalf of Noomi in connection with an Order, including fulfilment and delivery.</dd>
+        <dt>“Delivery”</dt>
+        <dd>means the handing over of an Order to the Customer, or to a person at the delivery address accepting it on the Customer’s behalf, as recorded by the Logistics Provider, and “Delivered” shall be construed accordingly.</dd>
+        <dt>“Delivery Date”</dt>
+        <dd>means the date of Delivery as recorded by the Logistics Provider or, where that record is disputed, as otherwise reasonably established.</dd>
+        <dt>“Eligible Claim”</dt>
+        <dd>means a Claim that Noomi has verified, in accordance with this Policy and Applicable Law, as relating to a Product affected by Damage, a Defect, a Deficiency, a Material Non-Conformity, a Wrong Product or a Spurious Product.</dd>
+        <dt>“Leakage”</dt>
+        <dd>means the escape of a Product’s contents from its primary container, other than trace residue consistent with normal filling, to an extent that materially reduces the quantity or compromises the integrity of the Product.</dd>
+        <dt>“Logistics Provider”</dt>
+        <dd>means {c.logisticsProvider}, or any other carrier engaged by or on behalf of Noomi to deliver Orders or collect Returns.</dd>
+        <dt>“Material Non-Conformity”</dt>
+        <dd>means a material difference between a Product as Delivered and (i) its description, characteristics or features as advertised on the Website, or (ii) the characteristics or features agreed for the Order, excluding any variation described in clause 8.</dd>
+        <dt>“Opened Product”</dt>
+        <dd>means a Product whose tamper-evident seal, shrink wrap, inner seal, cap seal or other closure has been broken, removed or compromised after Delivery.</dd>
+        <dt>“Order”</dt>
+        <dd>means an order for one or more Products placed by a Customer on the Website and accepted by Noomi.</dd>
+        <dt>“Product”</dt>
+        <dd>means any Noomi product sold on the Website, including Calm Serum and Barrier Repair Cream, together with its primary and secondary packaging, labelling and any accessory supplied with it.</dd>
+        <dt>“Refund”</dt>
+        <dd>means the repayment to a Customer of an amount determined in accordance with clause 11.</dd>
+        <dt>“Replacement”</dt>
+        <dd>means the supply, at no additional charge to the Customer, of a Product of the same description in substitution for a Product that is the subject of an Eligible Claim.</dd>
+        <dt>“Return”</dt>
+        <dd>means the physical return of a Product to Noomi, or to a location designated by Noomi, pursuant to written return instructions issued by Noomi under clause 10.</dd>
+        <dt>“Spurious Product”</dt>
+        <dd>means a Product that is falsely claimed to be genuine, or that is counterfeit, supplied in connection with an Order placed on the Website.</dd>
+        <dt>“Tampering”</dt>
+        <dd>means any interference with a Product, its contents, its packaging or its seals after Delivery, including adulteration, substitution, refilling, dilution or alteration, and “Tampered” shall be construed accordingly.</dd>
+        <dt>“Used Product”</dt>
+        <dd>means a Product any part of whose contents has been dispensed, applied, decanted or otherwise consumed after Delivery, other than to the minimum extent reasonably necessary to identify a Defect.</dd>
+        <dt>“Website”</dt>
+        <dd>means the Noomi website and online store at which Orders are placed.</dd>
+        <dt>“Wrong Product”</dt>
+        <dd>means a Product other than, or in a quantity or variant other than, that specified in the Order.</dd>
+      </dl>
+    </C>
+    <C n="1.2"><p><strong>Interpretation.</strong> In this Policy, unless the context otherwise requires:</p>
+      <Sub items={[
+        'headings are included for convenience only and shall not, independently, determine or affect the interpretation of this Policy;',
+        'words in the singular include the plural and vice versa;',
+        'references to a person include an individual, a company, a partnership, a trust, a body corporate and any other entity, whether or not having separate legal personality;',
+        'the words “include”, “including” and “in particular” are illustrative and shall not limit the generality of the preceding words;',
+        'references to a law include that law as amended, re-enacted or replaced, and any subordinate legislation made under it;',
+        'references to clauses are to clauses of this Policy; and',
+        'references to “writing” or “written” include email.',
+      ]} />
+    </C>
+    <C n="1.3"><p>Where a term is defined both in this Policy and in Applicable Law, and the definition in this Policy would give a Consumer a narrower right or remedy than the definition in Applicable Law, the definition in Applicable Law shall prevail to that extent.</p></C>
+  </section>
+
+  <!-- 2 -->
+  <section id="status" aria-labelledby="h-status">
+    <h2 id="h-status"><span class="n">2.</span> Status of this Policy and statutory rights</h2>
+    <C n="2.1"><p>This Policy sets out Noomi’s commercial framework for returns, refunds and replacements. It operates in two distinct parts:</p>
+      <Sub items={[
+        '<strong>Noomi’s voluntary commercial policy</strong>, being the rules Noomi applies to requests that are not founded on any right under Applicable Law, including requests for discretionary returns; and',
+        '<strong>rights and remedies under Applicable Law</strong>, which cannot lawfully be excluded, and which this Policy supports with a procedure for reporting and verifying Claims but does not limit.',
+      ]} />
+    </C>
+    <div class="key" id="statutory">
+      <p>
+        Nothing contained in this Policy shall be construed as excluding, restricting, extinguishing, waiving or otherwise
+        limiting any right, remedy, protection, guarantee or entitlement available to a Consumer under any applicable
+        mandatory provision of law. Where any provision of this Policy is inconsistent with a mandatory legal requirement,
+        the mandatory legal requirement shall prevail to the extent of such inconsistency.
+      </p>
+    </div>
+    <C n="2.2"><p>Accordingly, every exclusion, condition, time period and evidentiary request in this Policy is subject to Applicable Law and shall apply only to the extent permitted by Applicable Law.</p></C>
+  </section>
+
+  <!-- 3 -->
+  <section id="position" aria-labelledby="h-position">
+    <h2 id="h-position"><span class="n">3.</span> General returns position</h2>
+    <C n="3.1"><p><strong>No discretionary returns or exchanges.</strong> Noomi does not accept Returns, and does not provide Refunds, Replacements or exchanges, as a matter of discretion where a Customer:</p>
+      <Sub items={[
+        'has changed their mind;',
+        'no longer wants the Product;',
+        'prefers another Product;',
+        'selected a Product that is unsuitable for them, other than by reason of a Material Non-Conformity;',
+        'ordered the wrong variant;',
+        'ordered the wrong quantity;',
+        'is dissatisfied for reasons unrelated to Damage, a Defect, a Deficiency or a Material Non-Conformity; or',
+        'simply does not like the Product.',
+      ]} />
+    </C>
+    <C n="3.2"><p><strong>Products not accepted for discretionary return.</strong> Subject to Applicable Law, Noomi will generally not accept a discretionary Return of:</p>
+      <Sub items={[
+        'an Opened Product;',
+        'a Used Product;',
+        'a Product whose seal has been broken or removed;',
+        'a Product whose packaging is missing;',
+        'a Product materially damaged after Delivery;',
+        'a Product contaminated after Delivery;',
+        'a Product Tampered with after Delivery;',
+        'a Product exposed after Delivery to storage conditions inappropriate for it; or',
+        'a Product purchased from a person other than Noomi or a seller authorised by Noomi.',
+      ]} />
+    </C>
+    <C n="3.3"><p>For the avoidance of doubt, clauses 3.1 and 3.2 describe Noomi’s voluntary commercial policy only. They do not apply to, and shall not be construed as limiting, any Claim relating to Damage, a Defect, a Deficiency, a Material Non-Conformity, a Wrong Product, a Spurious Product or late delivery in respect of which a Consumer has a right or remedy under Applicable Law. Such Claims are governed by clauses 4 to 11.</p></C>
+    <C n="3.4"><p><strong>Cancellation before dispatch.</strong> A Customer may request cancellation of an Order before it is dispatched on the terms set out at [ORDER CANCELLATION TERMS — TBD]. Noomi shall not impose any cancellation charge except as permitted by Applicable Law.</p></C>
+    <C n="3.5"><p><strong>Pre-orders.</strong> An Order placed while a Product is offered for pre-order (a “<strong>Pre-order</strong>”) is accepted on the basis that the Product will be dispatched after launch. The expected dispatch date shall be communicated to the Customer ({c.preorder.dispatch}). Where a Pre-order is not dispatched by the date communicated, the Customer’s rights and remedies shall be as provided under Applicable Law and [PRE-ORDER CANCELLATION TERMS — TBD]. All other provisions of this Policy apply to Pre-orders once Delivered.</p></C>
+  </section>
+
+  <!-- 4 -->
+  <section id="claims" aria-labelledby="h-claims">
+    <h2 id="h-claims"><span class="n">4.</span> Damaged, defective, deficient or incorrect Products</h2>
+    <C n="4.1"><p><strong>Qualifying issues.</strong> A Customer may make a Claim where a Product, as Delivered, is affected by any of the following:</p>
+      <Sub items={[
+        'physical Damage in transit;',
+        'damage to packaging that has affected the Product itself;',
+        'Leakage;',
+        'a broken container, closure or seal;',
+        'a defective pump, dropper or other dispenser;',
+        'supply of a Wrong Product;',
+        'a material manufacturing Defect;',
+        'a material Deficiency;',
+        'a Spurious Product;',
+        'a Material Non-Conformity with the Product’s description as advertised; or',
+        'a Material Non-Conformity with the characteristics agreed for the Order.',
+      ]} />
+    </C>
+    <C n="4.2"><p><strong>Late delivery.</strong> Where an Order is Delivered materially later than the delivery schedule stated at the time of the Order, the Customer’s rights and remedies shall be as provided under Applicable Law, save where the delay was caused by force majeure or other circumstances in respect of which Applicable Law provides otherwise.</p></C>
+    <C n="4.3"><p><strong>Reporting period.</strong> Customers are requested to report a Claim to {b.supportEmail} within {c.claimWindow} from the Delivery Date. Prompt reporting enables Noomi to preserve delivery records, identify affected batches and resolve the Claim quickly. The Claim Window is a procedural request for the purposes of Noomi’s internal process only: it shall not be construed as extinguishing, and does not extinguish, any right of a Consumer that subsists under Applicable Law after its expiry, and a Claim reported after the Claim Window shall be assessed on its merits in accordance with Applicable Law.</p></C>
+    <C n="4.4"><p><strong>Information requested.</strong> To enable Noomi to verify and resolve a Claim, the Customer is requested to provide, where reasonably available:</p>
+      <Sub items={[
+        'the Order number;',
+        'the Customer’s name;',
+        'the email address used for the Order;',
+        'a phone number;',
+        'a description of the issue;',
+        'photographs of the external shipping packaging;',
+        'photographs of the Product;',
+        'a photograph of the batch or lot number printed on the Product;',
+        'photographs clearly showing the alleged Damage or Defect;',
+        'an unboxing video, where one is available; and',
+        'delivery documentation, where relevant.',
+      ]} />
+    </C>
+    <C n="4.5"><p><strong>Purpose of these requests.</strong> The information listed in clause 4.4 is requested to facilitate verification and investigation. It is not intended to impose, and shall not be construed as imposing, an evidentiary burden on a Consumer that is not permitted by Applicable Law. The absence of any item, including an unboxing video, shall not by itself be a ground for rejecting a Claim, and Noomi will consider any other reasonable evidence the Customer is able to provide.</p></C>
+    <C n="4.6"><p><strong>Safety concerns.</strong> Where a Customer believes a Product may be contaminated or unsafe, or experiences an adverse reaction, the Customer should stop using the Product, seek appropriate medical advice where needed, and inform Noomi without delay. Such reports will be treated as a priority and are not subject to clauses 3.1 or 3.2.</p></C>
+  </section>
+
+  <!-- 5 -->
+  <section id="investigation" aria-labelledby="h-investigation">
+    <h2 id="h-investigation"><span class="n">5.</span> Verification and investigation</h2>
+    <C n="5.1"><p>Subject to Applicable Law, Noomi may reasonably investigate a Claim before determining the appropriate remedy. Any such investigation shall be conducted in good faith, proportionately to the nature of the Claim, and without unreasonable delay.</p></C>
+    <C n="5.2"><p>An investigation may include:</p>
+      <Sub items={[
+        'review of Order records;',
+        'review of fulfilment and packing records;',
+        'review of shipping records;',
+        'review of delivery records maintained by the Logistics Provider;',
+        'review of photographs;',
+        'review of videos;',
+        'verification of batch or lot information;',
+        'examination of packaging;',
+        'assessment of whether Damage occurred in transit;',
+        'assessment of whether a manufacturing Defect is present;',
+        'assessment of whether damage occurred after Delivery;',
+        'assessment of whether the Product was improperly stored;',
+        'assessment of whether Tampering has occurred; and',
+        'reasonable requests to the Customer for additional information.',
+      ]} />
+    </C>
+    <C n="5.3"><p><strong>Return for inspection.</strong> Where reasonably necessary, Noomi may request the Return of the affected Product for:</p>
+      <Sub items={[
+        'physical inspection;',
+        'quality-control analysis;',
+        'manufacturing investigation;',
+        'batch investigation; or',
+        'verification of the alleged Damage or Defect,',
+      ]} />
+      <p>provided that any such Return shall be arranged in accordance with clause 10, and provided further that a request for Return shall not be used to delay or defeat a remedy to which a Consumer is entitled under Applicable Law.</p>
+    </C>
+    <C n="5.4"><p>Noomi will inform the Customer of the outcome of its investigation and, where a Claim is not accepted, the reasons for that decision.</p></C>
+  </section>
+
+  <!-- 6 -->
+  <section id="eligibility" aria-labelledby="h-eligibility">
+    <h2 id="h-eligibility"><span class="n">6.</span> Eligibility and exclusions</h2>
+    <C n="6.1"><p>A Claim shall constitute an Eligible Claim where, following verification under clause 5, Noomi is reasonably satisfied that the Product is affected by Damage, a Defect, a Deficiency, a Material Non-Conformity, a Wrong Product or a Spurious Product for which Noomi is responsible.</p></C>
+    <C n="6.2"><p>Subject to Applicable Law, a Claim may be declined where reasonable evidence establishes that the issue complained of resulted from:</p>
+      <Sub items={[
+        'misuse;',
+        'negligence;',
+        'improper handling;',
+        'improper storage;',
+        'exposure to excessive heat;',
+        'exposure to excessive cold;',
+        'excessive moisture;',
+        'direct sunlight;',
+        'contamination after Delivery;',
+        'failure to follow reasonable Product instructions;',
+        'use after the expiry date or the end of the stated period after opening;',
+        'use contrary to disclosed instructions or warnings;',
+        'Tampering;',
+        'unauthorised alteration;',
+        'unauthorised repair;',
+        'physical damage after Delivery;',
+        'purchase from a person other than Noomi or a seller authorised by Noomi;',
+        'fraudulent representations;',
+        'materially misleading evidence; or',
+        'circumstances outside Noomi’s reasonable control,',
+      ]} />
+      <p>in each case occurring after Delivery or otherwise not attributable to Noomi.</p>
+    </C>
+    <C n="6.3"><p>Characteristics of a Product that are accurately disclosed, reasonably inherent to its formulation, or within reasonable manufacturing tolerances do not, of themselves, constitute a Defect (see clause 8).</p></C>
+    <C n="6.4"><p>Notwithstanding clauses 6.2 and 6.3, nothing in this clause 6 shall be construed as excusing, or shall be relied upon by Noomi to decline a Claim relating to, a genuine safety issue, contamination for which Noomi is responsible, a materially defective or materially deficient Product, a Spurious Product, or a Product materially inconsistent with its advertised characteristics.</p></C>
+  </section>
+
+  <!-- 7 -->
+  <section id="integrity" aria-labelledby="h-integrity">
+    <h2 id="h-integrity"><span class="n">7.</span> Hygiene and product integrity</h2>
+    <C n="7.1"><p>Skincare and cosmetic Products are applied to the skin and are subject to heightened hygiene, contamination-control, safety and product-integrity considerations. Their integrity depends on the continuity of their seals and on their storage and handling conditions, which Noomi cannot verify once a Product has left its control.</p></C>
+    <C n="7.2"><p>Once a Product has been opened, unsealed, used, Tampered with, contaminated or altered, it may no longer be suitable for resale, redistribution or donation, and Noomi may be unable to confirm that it remains safe for any other person.</p></C>
+    <C n="7.3"><p>Accordingly, except where Applicable Law requires otherwise, Noomi will not accept discretionary Returns of Opened Products, Used Products, unsealed Products or Products that have been Tampered with.</p></C>
+    <C n="7.4"><p>For the avoidance of doubt, this clause 7 applies only to discretionary Returns under Noomi’s voluntary commercial policy. It shall not be construed as restricting any Claim relating to a Product that is defective, damaged, deficient, spurious or materially misdescribed. In particular, where a Defect or Material Non-Conformity only becomes apparent on opening or first use, the fact that the Product has been opened or minimally used shall not, by itself, be a ground for declining the Claim.</p></C>
+    <C n="7.5"><p>Products returned to Noomi under this Policy, whether for inspection or following an Eligible Claim, will not be resold as new.</p></C>
+  </section>
+
+  <!-- 8 -->
+  <section id="characteristics" aria-labelledby="h-characteristics">
+    <h2 id="h-characteristics"><span class="n">8.</span> Cosmetic product characteristics</h2>
+    <C n="8.1"><p>Cosmetic formulations may exhibit reasonable variation between batches and over their shelf life. Such variation may occur in:</p>
+      <Sub items={[
+        'texture;',
+        'viscosity;',
+        'appearance;',
+        'colour;',
+        'fragrance or scent;',
+        'packaging finish; and',
+        'dispensing behaviour,',
+      ]} />
+      <p>and, where it is consistent with the Product description, the formulation and reasonable manufacturing tolerances, does not of itself constitute a Defect or a Material Non-Conformity.</p>
+    </C>
+    <C n="8.2"><p>Reasonable variation under clause 8.1 is expressly distinguished from, and does not include:</p>
+      <Sub items={[
+        'contamination;',
+        'a Product that is unsafe;',
+        'a material Defect;',
+        'a material Deficiency;',
+        'significant Leakage;',
+        'broken packaging;',
+        'a Material Non-Conformity;',
+        'a Wrong Product; or',
+        'a Product materially inconsistent with its advertised characteristics,',
+      ]} />
+      <p>each of which may form the basis of a Claim under clause 4.</p>
+    </C>
+    <C n="8.3"><p>Individual skin responds differently to cosmetic products. Nothing on the Website or in this Policy constitutes a medical, therapeutic or efficacy guarantee, and a Product not producing a particular result for an individual Customer does not, of itself, constitute a Defect. This clause is without prejudice to any Claim that a Product is materially inconsistent with a claim Noomi has made about it.</p></C>
+  </section>
+
+  <!-- 9 -->
+  <section id="remedies" aria-labelledby="h-remedies">
+    <h2 id="h-remedies"><span class="n">9.</span> Remedies</h2>
+    <C n="9.1"><p>Following verification of an Eligible Claim, Noomi shall provide an appropriate remedy, which may include:</p>
+      <Sub items={[
+        'Replacement of the affected Product;',
+        'a Refund of the amount attributable to the affected Product, calculated in accordance with clause 11; or',
+        'any other remedy required or permitted under Applicable Law.',
+      ]} />
+    </C>
+    <C n="9.2"><p>Where Applicable Law entitles a Consumer to a particular remedy, or to choose between remedies, Noomi shall provide that remedy or respect that choice. Where Applicable Law permits more than one remedy and does not confer a choice on the Consumer, Noomi will select a remedy reasonably, having regard to the nature of the issue, the availability of stock and the Customer’s stated preference. A Replacement may not be available where the Product is out of stock, in which case a Refund will be offered.</p></C>
+    <C n="9.3"><p><strong>Method of Refund.</strong> A Refund shall generally be made through the original method of payment. Where that is not reasonably practicable, the Refund shall be made through another method permitted by Applicable Law and agreed with the Customer. Noomi shall not require a Customer to accept store credit or a voucher in place of a Refund to which the Customer is entitled under Applicable Law.</p></C>
+    <C n="9.4"><p><strong>Timing.</strong> Refunds shall be initiated within {c.refundPeriod} of Noomi’s acceptance of an Eligible Claim, and in any event within any period prescribed by Applicable Law. The time taken for the amount to reflect in the Customer’s account depends on the Customer’s bank or payment provider.</p></C>
+    <C n="9.5"><p>A Replacement shall be dispatched at no additional charge to the Customer.</p></C>
+  </section>
+
+  <!-- 10 -->
+  <section id="logistics" aria-labelledby="h-logistics">
+    <h2 id="h-logistics"><span class="n">10.</span> Return logistics</h2>
+    <C n="10.1"><p>Customers should not send any Product to Noomi without first receiving written return instructions from Noomi. Products sent without instructions may not be traceable, and Noomi cannot be responsible for their loss in transit, provided that this clause shall not prejudice a Claim that is otherwise an Eligible Claim.</p></C>
+    <C n="10.2"><p>Where Noomi authorises or requests a Return because a Product is damaged, defective, incorrect or materially non-conforming, or for inspection under clause 5.3, Noomi shall provide return instructions and shall arrange a collection through the Logistics Provider or, where collection is not available at the Customer’s location, reimburse the reasonable cost of an authorised return shipment on production of proof of postage.</p></C>
+    <C n="10.3"><p>A Customer shall not be required to bear the cost of returning a Product that is the subject of an Eligible Claim, or any other cost that Applicable Law requires Noomi to bear.</p></C>
+    <C n="10.4"><p>The Customer is requested to pack a returned Product securely, where reasonably practicable in its original packaging, and to retain any receipt or tracking reference issued for the Return.</p></C>
+  </section>
+
+  <!-- 11 -->
+  <section id="calculation" aria-labelledby="h-calculation">
+    <h2 id="h-calculation"><span class="n">11.</span> Refund calculation</h2>
+    <C n="11.1"><p>The amount of a Refund shall be the amount actually paid by the Customer that is attributable to the affected Product, determined as follows:</p>
+      <Sub items={[
+        '<strong>Product price</strong>: the price actually paid for the affected Product, after any discount applied to it (see clause 12);',
+        `<strong>applicable taxes</strong>: taxes charged on the affected Product shall be refunded in accordance with [TAX TREATMENT OF REFUNDS — TBD] and Applicable Law;`,
+        `<strong>shipping charges</strong>: where the entire Order is the subject of an Eligible Claim, or the Order is cancelled before dispatch, shipping charges paid, if any (${c.shipping}), shall be refunded; where only part of an Order is affected, the treatment of shipping charges shall be [SHIPPING-CHARGE REFUND RULE FOR PARTIAL CLAIMS — TBD], subject to Applicable Law;`,
+        '<strong>discounts and promotional codes</strong>: as provided in clause 12;',
+        '<strong>bundles</strong>: as provided in clause 12.4;',
+        '<strong>free Products</strong>: as provided in clause 12.5;',
+        '<strong>introductory offers, including the pre-order discount</strong>: the Refund shall be based on the discounted price actually paid, not on any later or regular price;',
+        '<strong>partially fulfilled Orders</strong>: where Noomi is unable to supply part of an Order, the amount paid for the unsupplied Products shall be refunded in full;',
+        '<strong>cancelled Orders</strong>: where an Order is cancelled before dispatch, whether by the Customer in accordance with clause 3.4 or by Noomi, the full amount paid shall be refunded, subject only to any cancellation charge permitted by Applicable Law; and',
+        '<strong>Replacement Orders</strong>: where a Replacement has been supplied for a Product, no separate Refund shall be due for that Product, save where the Replacement is itself the subject of an Eligible Claim.',
+      ]} />
+    </C>
+    <C n="11.2"><p>No deduction shall be made from a Refund for an Eligible Claim on account of restocking, handling, processing or return shipping, save as expressly permitted by Applicable Law.</p></C>
+  </section>
+
+  <!-- 12 -->
+  <section id="promotions" aria-labelledby="h-promotions">
+    <h2 id="h-promotions"><span class="n">12.</span> Promotional and bundled Orders</h2>
+    <C n="12.1"><p>This clause applies to Orders that include a promotional discount, coupon code, bundle, free Product, minimum-order promotion, introductory price or other promotional offer (each, a “<strong>Promotion</strong>”). The terms of any Promotion shall be displayed at the time it is offered: [PROMOTION TERMS — TBD].</p></C>
+    <C n="12.2"><p><strong>Allocation of discounts.</strong> Where a Refund is due in respect of some but not all Products in an Order that received a Promotion applying across the Order, the monetary value of the Promotion may be allocated across the Products in proportion to their undiscounted prices, where reasonably necessary to determine the amount actually paid for, and attributable to, the affected Product. The allocation method shall be applied consistently and transparently, and Noomi will explain it to the Customer on request.</p></C>
+    <C n="12.3"><p><strong>Minimum-order promotions.</strong> Where a Promotion depended on an Order reaching a minimum value or quantity, a Refund in respect of part of that Order shall not be reduced on the ground that the remaining Products fall below the minimum, where the Refund arises from an Eligible Claim.</p></C>
+    <C n="12.4"><p><strong>Bundles.</strong> Where Products were sold together as a bundle at a single price, the bundle price shall be allocated across the Products in the bundle in proportion to their individual list prices, to determine the amount attributable to an affected Product. Where the affected Product cannot reasonably be separated from the bundle, Noomi will offer a Replacement of the affected Product or a Refund of the bundle, as appropriate.</p></C>
+    <C n="12.5"><p><strong>Free Products.</strong> A Product supplied free of charge has no purchase price to refund. Where a free Product is itself the subject of an Eligible Claim, Noomi will offer a Replacement where available.</p></C>
+    <C n="12.6"><p>Coupon codes applied to an Order that is fully refunded or cancelled shall be reinstated where the terms of the Promotion so provide or where Applicable Law so requires.</p></C>
+    <C n="12.7"><p>Nothing in this clause 12 permits an arbitrary deduction, or a deduction that has not been disclosed, from any Refund.</p></C>
+  </section>
+
+  <!-- 13 -->
+  <section id="abuse" aria-labelledby="h-abuse">
+    <h2 id="h-abuse"><span class="n">13.</span> Fraudulent, abusive or repetitive Claims</h2>
+    <C n="13.1"><p>Noomi may reasonably investigate a Claim that appears, on reasonable grounds, to be fraudulent, abusive or materially misleading, including where there are indications of:</p>
+      <Sub items={[
+        'repeated unsupported claims of Damage;',
+        'materially inconsistent evidence;',
+        'manipulated or re-used photographs or videos;',
+        'false claims of non-delivery;',
+        'Products purchased from unauthorised sources;',
+        'deliberate damage after Delivery; or',
+        'material misrepresentation of the circumstances of a Claim.',
+      ]} />
+    </C>
+    <C n="13.2"><p>Subject to Applicable Law, Noomi may decline a Claim that is not substantiated following such an investigation, and may take reasonable steps to protect itself against further fraudulent or abusive Claims, including declining future Orders from the same person. Noomi will inform the Customer of its decision and the reasons for it.</p></C>
+    <C n="13.3"><p>A Claim shall not be treated as fraudulent or abusive merely because it is the Customer’s second or subsequent Claim, or because supporting evidence is incomplete.</p></C>
+  </section>
+
+  <!-- 14 -->
+  <section id="preservation" aria-labelledby="h-preservation">
+    <h2 id="h-preservation"><span class="n">14.</span> Preservation of statutory rights</h2>
+    <div class="key">
+      <p>
+        Nothing contained in this Policy shall be construed as excluding, restricting, extinguishing, waiving or otherwise
+        limiting any right, remedy, protection, guarantee or entitlement available to a Consumer under any applicable
+        mandatory provision of law. Where any provision of this Policy is inconsistent with a mandatory legal requirement,
+        the mandatory legal requirement shall prevail to the extent of such inconsistency.
+      </p>
+    </div>
+    <C n="14.1"><p>This Policy governs Noomi’s commercial return framework. It does not purport to contract out of, and shall not be construed as contracting out of, any mandatory consumer protection under Applicable Law.</p></C>
+    <C n="14.2"><p>Without prejudice to the generality of clause 14, no statement on the Website, on packaging or in any communication that a sale is final, or that a Product is not returnable, shall be construed as applying to a Claim relating to Damage, a Defect, a Deficiency, a Material Non-Conformity, a Wrong Product, a Spurious Product or late delivery in respect of which a Consumer has a right under Applicable Law.</p></C>
+    <C n="14.3"><p>If any provision of this Policy is held to be invalid or unenforceable, that provision shall be applied to the maximum extent permitted by Applicable Law and the remaining provisions shall continue in full force.</p></C>
+  </section>
+
+  <!-- 15 -->
+  <section id="law" aria-labelledby="h-law">
+    <h2 id="h-law"><span class="n">15.</span> Applicable Law</h2>
+    <C n="15.1"><p>This Policy shall be read and applied in accordance with Applicable Law, including applicable Indian consumer protection, e-commerce, cosmetics, legal metrology and information technology laws. Whether a particular statutory right or remedy applies to a Claim depends on the facts of that Claim and on Applicable Law, and this Policy does not purport to determine that question.</p></C>
+    <C n="15.2"><p>This Policy does not override any legislation. In the event of any conflict between this Policy and Applicable Law, Applicable Law shall prevail.</p></C>
+  </section>
+
+  <!-- 16 -->
+  <section id="changes" aria-labelledby="h-changes">
+    <h2 id="h-changes"><span class="n">16.</span> Changes to this Policy</h2>
+    <C n="16.1"><p>Noomi may amend this Policy prospectively by publishing an updated version on the Website with a new effective date. This version is effective from {legal.returnsEffectiveDate}.</p></C>
+    <C n="16.2"><p>An Order shall be handled in accordance with Applicable Law and with the version of this Policy in effect when the Order was placed, save that a Customer may rely on any later version that is more favourable to the Customer, and subject always to any mandatory provision of Applicable Law.</p></C>
+  </section>
+
+  <!-- 17 -->
+  <section id="disputes" aria-labelledby="h-disputes">
+    <h2 id="h-disputes"><span class="n">17.</span> Governing law and dispute resolution</h2>
+    <C n="17.1"><p><strong>Governing law.</strong> This Policy shall be governed by and construed in accordance with the laws of India.</p></C>
+    <C n="17.2"><p><strong>Grievance escalation.</strong> A Customer who is dissatisfied with the handling or outcome of a Claim is encouraged first to write to the Grievance Officer under clause 18, who will acknowledge and address the grievance within the timelines prescribed by Applicable Law.</p></C>
+    <C n="17.3"><p><strong>Dispute resolution.</strong> Noomi and the Customer shall attempt in good faith to resolve any dispute arising out of or in connection with this Policy amicably. [ADDITIONAL DISPUTE-RESOLUTION MECHANISM, IF ANY — TBD].</p></C>
+    <C n="17.4"><p><strong>Jurisdiction.</strong> Subject to clause 17.5, the courts at {b.jurisdiction} shall have jurisdiction in respect of any dispute arising out of or in connection with this Policy.</p></C>
+    <C n="17.5"><p>Nothing in this clause 17 shall be construed as limiting the right of a Consumer to approach any Consumer Disputes Redressal Commission, or any other forum, authority or body, having jurisdiction under Applicable Law, including a forum at the place where the Consumer resides or works for gain, where Applicable Law so permits.</p></C>
+  </section>
+
+  <!-- 18 -->
+  <section id="grievance" aria-labelledby="h-grievance">
+    <h2 id="h-grievance"><span class="n">18.</span> Grievance contact</h2>
+    <C n="18.1"><p>Claims should be sent to {b.supportEmail}. Grievances about this Policy, or about the handling of a Claim, may be addressed to:</p>
+      <address>
+        <span><strong>{b.legalEntityName}</strong></span>
+        <span>{b.registeredAddress}</span>
+        <span>Grievance Officer: {b.grievanceOfficerName}</span>
+        <span>Email: {b.grievanceEmail}</span>
+        <span>Phone: {b.phone}</span>
+      </address>
+    </C>
+  </section>
+</Legal>

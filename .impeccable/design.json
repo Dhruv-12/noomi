@@ -1,0 +1,144 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-24T12:00:00Z",
+  "title": "Design System: Noomi",
+  "extensions": {
+    "colorMeta": {
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#001F3F", "tonalRamp": ["#001E3D", "#003770", "#0050A3", "#006EE0", "#1F8DFF", "#5CACFF", "#A3D0FF", "#E5F2FF"] },
+      "depth": { "role": "neutral", "displayName": "Depth", "canonical": "#002D55", "tonalRamp": ["#00203D", "#003B70", "#0056A3", "#0077E0", "#1F95FF", "#5CB2FF", "#A3D4FF", "#E5F3FF"] },
+      "blue": { "role": "primary", "displayName": "Noomi Blue", "canonical": "#004B87", "tonalRamp": ["#00223D", "#003E70", "#005BA3", "#007DE0", "#1F9BFF", "#5CB6FF", "#A3D6FF", "#E5F4FF"] },
+      "calm": { "role": "secondary", "displayName": "Calm Blue", "canonical": "#6A9BD1", "tonalRamp": ["#0E1E2F", "#1A3756", "#26507D", "#356DAB", "#548CCA", "#82ABD9", "#B9D0E9", "#ECF2F9"] },
+      "mist": { "role": "neutral", "displayName": "Mist", "canonical": "#F0F4F8", "tonalRamp": ["#131F2A", "#24384D", "#34526F", "#477099", "#668FB8", "#90ADCB", "#C0D1E2", "#EEF2F7"] },
+      "mist-soft": { "role": "neutral", "displayName": "Mist Soft", "canonical": "color-mix(in srgb, #F0F4F8 80%, #004B87)", "tonalRamp": ["#142029", "#243A4C", "#35546F", "#487498", "#6792B7", "#90B0CA", "#C1D3E1", "#EEF3F7"] },
+      "ink-soft": { "role": "neutral", "displayName": "Ink Soft", "canonical": "color-mix(in srgb, #001F3F 80%, #004B87)", "tonalRamp": ["#00203D", "#003A70", "#0055A3", "#0075E0", "#1F93FF", "#5CB1FF", "#A3D3FF", "#E5F3FF"] }
+    },
+    "typographyMeta": {
+      "display-black": { "displayName": "Display Black", "purpose": "The hard half of every headline: condensed (width 75%), weight 800." },
+      "display-wide": { "displayName": "Display Wide", "purpose": "The soft half of every headline: expanded (width 125%), weight 300." },
+      "title": { "displayName": "Title", "purpose": "Product lines and the disclosure list; the wide voice at reading size." },
+      "lede": { "displayName": "Lede", "purpose": "Section intros set beside display type, 26 to 32ch." },
+      "body": { "displayName": "Body", "purpose": "Base text; 1.0625rem, 1.125rem from 900px." },
+      "action": { "displayName": "Action", "purpose": "Button and link-CTA labels." },
+      "caption": { "displayName": "Caption", "purpose": "Image callouts, mood credits, field labels, footer links, footnotes. Never a kicker." }
+    },
+    "shadows": [
+      { "name": "overlap-print", "value": "0 30px 60px -30px color-mix(in srgb, var(--ink) 70%, transparent)", "purpose": "Only under a smaller image overlapping a larger one." },
+      { "name": "field-focus", "value": "0 1px 0 var(--calm)", "purpose": "Thickens a field underline on focus." }
+    ],
+    "motion": [
+      { "name": "ease-out", "value": "cubic-bezier(0.16, 1, 0.3, 1)", "purpose": "Default for reveals, fills, underline wipes and plate drift." },
+      { "name": "ease-in-out", "value": "cubic-bezier(0.65, 0, 0.35, 1)", "purpose": "Looping pulses (busy button)." },
+      { "name": "reveal-rise", "value": "opacity 900ms, transform 1100ms from translateY(28px)", "purpose": "Body copy settling in once on entry." },
+      { "name": "reveal-mask", "value": "clip-path 1200ms from inset(0 0 100% 0) with translateY(12%)", "purpose": "Display words unmasking upward." },
+      { "name": "button-flood", "value": "clip-path circle 0% to 150% at pointer, 700ms", "purpose": "Primary button hover and focus fill." },
+      { "name": "scroll-progress", "value": "--p 0..1 per [data-progress] element", "purpose": "Drives plate zoom and headline word drift; fixed at 0.5 under reduced motion." },
+      { "name": "hero-liquid", "value": "WebGL flow and travelling glint on the serum drop only", "purpose": "Signature interaction; plate is still without WebGL." }
+    ],
+    "breakpoints": [
+      { "name": "desktop", "value": "900px" }
+    ],
+    "layout": {
+      "max": "1360px",
+      "gutter": "clamp(20px, 5vw, 64px)",
+      "columns": "1 (mobile), 12 with 24px gap (900px+)",
+      "band": "clamp(96px, 14vh, 150px); clamp(160px, 24vh, 240px) for dark-to-light and light-to-dark"
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Square mist slab on dark grounds; calm floods in from the pointer and the arrow swaps.",
+      "html": "<a class=\"ds-btn\" href=\"#\"><span class=\"ds-btn__fill\"></span><span>Get early access</span><span class=\"ds-btn__icon\"><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\"><path d=\"M3 12h16M13 5.5 19.5 12 13 18.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"square\"/></svg></span></a>",
+      "css": ".ds-btn { position: relative; isolation: isolate; overflow: hidden; display: inline-flex; align-items: center; justify-content: space-between; gap: 32px; min-height: 60px; padding: 0 24px 0 32px; border-radius: 0; background: #F0F4F8; color: #001F3F; font-family: 'Archivo Variable', 'Archivo', system-ui, sans-serif; font-size: 1.25rem; font-weight: 650; font-stretch: 105%; letter-spacing: -0.005em; text-decoration: none; transition: color 420ms cubic-bezier(0.16,1,0.3,1), transform 300ms cubic-bezier(0.16,1,0.3,1); } .ds-btn__fill { position: absolute; inset: 0; z-index: -1; background: #6A9BD1; clip-path: circle(0% at 50% 50%); transition: clip-path 700ms cubic-bezier(0.16,1,0.3,1); } .ds-btn:hover .ds-btn__fill, .ds-btn:focus-visible .ds-btn__fill { clip-path: circle(150% at 50% 50%); } .ds-btn:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; } .ds-btn:active { transform: scale(0.985); } .ds-btn__icon svg { width: 1.3em; height: 1.3em; display: block; transition: transform 520ms cubic-bezier(0.16,1,0.3,1); } .ds-btn:hover .ds-btn__icon svg { transform: translateX(4px); }"
+    },
+    {
+      "name": "Link CTA",
+      "kind": "custom",
+      "refersTo": "link-cta",
+      "description": "Text link with arrow and a 2px underline that wipes away on hover.",
+      "html": "<a class=\"ds-link\" href=\"#\">Hear it first <svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\"><path d=\"M3 12h16M13 5.5 19.5 12 13 18.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"square\"/></svg></a>",
+      "css": ".ds-link { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: #001F3F; font-family: 'Archivo Variable', 'Archivo', system-ui, sans-serif; font-size: 1.25rem; font-weight: 650; text-decoration: none; background: linear-gradient(currentColor, currentColor) 0 100% / 100% 2px no-repeat; transition: background-size 500ms cubic-bezier(0.16,1,0.3,1); } .ds-link:hover { background-size: 0% 2px; background-position: 100% 100%; } .ds-link svg { width: 1.25em; height: 1.25em; transition: transform 400ms cubic-bezier(0.16,1,0.3,1); } .ds-link:hover svg { transform: translateX(6px); } .ds-link:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }"
+    },
+    {
+      "name": "Underline Field",
+      "kind": "input",
+      "refersTo": "input-underline",
+      "description": "Borderless field on ink with a mist hairline that turns calm on focus.",
+      "html": "<div class=\"ds-field\"><label class=\"ds-field__label\" for=\"ds-name\">First name</label><input class=\"ds-field__input\" id=\"ds-name\" placeholder=\"\"></div>",
+      "css": ".ds-field { display: grid; gap: 8px; padding: 24px; background: #001F3F; font-family: 'Archivo Variable', 'Archivo', system-ui, sans-serif; } .ds-field__label { color: #C0D2E1; font-size: 0.8125rem; font-weight: 600; font-stretch: 112%; letter-spacing: 0.01em; } .ds-field__input { min-height: 56px; padding: 0; border: 0; border-bottom: 1px solid color-mix(in srgb, #F0F4F8 45%, transparent); border-radius: 0; background: transparent; color: #F0F4F8; font: inherit; font-size: 1.5rem; font-weight: 500; outline: none; transition: border-color 300ms cubic-bezier(0.16,1,0.3,1); } .ds-field__input:focus { border-color: #6A9BD1; box-shadow: 0 1px 0 #6A9BD1; }"
+    },
+    {
+      "name": "Header",
+      "kind": "nav",
+      "refersTo": "header",
+      "description": "Wordmark left on mist, one Early access text link right.",
+      "html": "<header class=\"ds-nav\"><span class=\"ds-nav__mark\">[wordmark image]</span><a class=\"ds-nav__cta\" href=\"#\">Early access</a></header>",
+      "css": ".ds-nav { display: flex; align-items: center; justify-content: space-between; min-height: 72px; padding: 0 24px; background: #F0F4F8; color: #001F3F; font-family: 'Archivo Variable', 'Archivo', system-ui, sans-serif; } .ds-nav__mark { font-size: 0.8125rem; } .ds-nav__cta { color: inherit; font-size: 0.875rem; font-weight: 650; font-stretch: 112%; text-decoration: none; padding-block: 12px; background: linear-gradient(currentColor, currentColor) 0 100% / 100% 1px no-repeat; transition: background-size 500ms cubic-bezier(0.16,1,0.3,1); } .ds-nav__cta:hover { background-size: 0% 1px; background-position: 100% 100%; } .ds-nav__cta:focus-visible { outline: 2px solid currentColor; outline-offset: 4px; }"
+    },
+    {
+      "name": "Two-Voice Headline",
+      "kind": "custom",
+      "refersTo": "display-black",
+      "description": "Expanded light over condensed black, the system's signature type pairing.",
+      "html": "<h2 class=\"ds-head\"><span class=\"ds-head__wide\">A pair,</span><span class=\"ds-head__black\">on purpose.</span></h2>",
+      "css": ".ds-head { display: grid; margin: 0; padding: 24px; background: #6A9BD1; color: #001F3F; font-family: 'Archivo Variable', 'Archivo', system-ui, sans-serif; font-weight: inherit; } .ds-head__wide { font-stretch: 125%; font-weight: 300; font-size: 3rem; line-height: 0.95; letter-spacing: -0.03em; } .ds-head__black { font-stretch: 75%; font-weight: 800; font-size: 4.5rem; line-height: 0.86; letter-spacing: -0.02em; }"
+    },
+    {
+      "name": "Mood Credit",
+      "kind": "custom",
+      "refersTo": "caption",
+      "description": "Vertical caption credit on every temporary campaign image.",
+      "html": "<figure class=\"ds-mood\"><div class=\"ds-mood__img\"></div><figcaption class=\"ds-mood__credit\">Mood image, not the formula</figcaption></figure>",
+      "css": ".ds-mood { position: relative; margin: 0; width: 240px; height: 300px; overflow: hidden; } .ds-mood__img { position: absolute; inset: 0; background: linear-gradient(180deg, #F0F4F8, #6A9BD1 55%, #002D55); } .ds-mood__credit { position: absolute; right: 10px; top: 50%; translate: 0 -50%; writing-mode: vertical-rl; white-space: nowrap; color: #001F3F; font-family: 'Archivo Variable', 'Archivo', system-ui, sans-serif; font-size: 0.8125rem; font-weight: 600; font-stretch: 112%; letter-spacing: 0.01em; }"
+    },
+    {
+      "name": "Sticky Bar",
+      "kind": "custom",
+      "refersTo": "sticky-bar",
+      "description": "Mobile-only 48px ink bar shown between moments.",
+      "html": "<a class=\"ds-sticky\" href=\"#\"><span>Get early access</span><svg viewBox=\"0 0 24 24\" width=\"24\" height=\"24\"><path d=\"M3 12h16M13 5.5 19.5 12 13 18.5\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2.5\" stroke-linecap=\"square\"/></svg></a>",
+      "css": ".ds-sticky { display: flex; align-items: center; justify-content: space-between; min-height: 48px; padding: 0 20px; background: #001F3F; color: #F0F4F8; font-family: 'Archivo Variable', 'Archivo', system-ui, sans-serif; font-weight: 650; font-size: 1.0625rem; text-decoration: none; } .ds-sticky svg { width: 1.2em; height: 1.2em; } .ds-sticky:focus-visible { outline: 2px solid currentColor; outline-offset: -4px; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Two Textures in Blue Light",
+    "overview": "Noomi is a beauty campaign, not a product page. Two materials, a clear serum and a thick cream, meet under cool blue light, and the page is built as a run of immersive colour fields that each own one of the five client blues. Sections never sit in boxes; they flow ground to ground through tonal bands, and macro campaign plates bleed off the edge and feather into the ground through gradient masks rather than being framed.\n\nType does the rest. One variable family, Archivo, is pushed to both ends of its width axis: condensed black for the hard statement, expanded light for the soft one, stacked against each other whenever a headline has two beats. Density is low and the scale is loud; a single idea per viewport, set huge, with small plain body copy beside it. Everything is square. There are no cards, pills, badges or rounded corners anywhere in the build.\n\nMotion is slow and material: plates ease in and drift with scroll, headlines unmask upward, buttons flood with colour from the pointer, and in the hero only the serum drop is kept liquid by a WebGL shimmer. All of it degrades to a still, fully legible page under reduced motion or without JS and WebGL.",
+    "keyCharacteristics": [
+      "Five client blues used as full-bleed grounds, one per section, joined by tonal bands.",
+      "Archivo at two extremes of width (75% black, 125% light) as the only display voices.",
+      "Square edges throughout (0px radius); no containers, cards or chips.",
+      "Feathered, mask-edged campaign photography that bleeds to the viewport edge and overlaps display type.",
+      "Every temporary campaign image carries a visible \"Mood image\" credit."
+    ],
+    "rules": [
+      { "name": "The Client Palette Rule", "body": "The five blues are client-authoritative and fixed. New colours are only mixes of these five (`color-mix` in sRGB), never a new hue.", "section": "colors" },
+      { "name": "The Calm Is Never Body Text Rule", "body": "Calm never sets running or body text on a light ground (mist or calm itself). On ink, depth and blue grounds it may carry accent display words, strokes, focus and error text.", "section": "colors" },
+      { "name": "The One Ground Per Section Rule", "body": "Each section declares one palette ground and inherits its text colour from it: mist and calm grounds take ink text, blue, depth and ink grounds take mist text. Text never starts inside the tonal band.", "section": "colors" },
+      { "name": "The Two Voices Rule", "body": "Display type uses only condensed black or expanded light from the same family; a two-beat headline sets one beat in each. Never introduce a second typeface or a middle-width display voice.", "section": "typography" },
+      { "name": "The Wide Is Never Bold Rule", "body": "The expanded voice stays at weight 300; the condensed voice stays at 800.", "section": "typography" },
+      { "name": "The Tonal Band Rule", "body": "Sections join through a vertical gradient band (clamp(96px, 14vh, 150px), longer for dark-to-light) from the previous ground into the current one. Dark-to-light and light-to-dark bands pass through blue and calm so the midpoint stays blue. Content starts below the band.", "section": "layout" },
+      { "name": "The Feather, Don't Frame Rule", "body": "Campaign images meet their ground through gradient `mask-image` fades, not borders, frames or containers.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do give every section one palette ground via its ground declaration and join it to the previous one with a tonal band.",
+      "Do set display type only in condensed black (800, width 75%) or expanded light (300, width 125%), one beat in each when a headline has two.",
+      "Do keep every edge square (0px) and every rule a 1px or 2px hairline.",
+      "Do feather campaign images into the ground with gradient masks and let them bleed to a viewport edge.",
+      "Do put a visible vertical \"Mood image\" credit on every temporary campaign image, and never present it as product photography.",
+      "Do show the supplied wordmark as-is, on light grounds only, with `mix-blend-mode: multiply`.",
+      "Do keep content visible without JS, and settle all motion under `prefers-reduced-motion`."
+    ],
+    "donts": [
+      "Don't use calm for body text on mist or calm grounds.",
+      "Don't trace, redraw, recolour or place the wordmark on a dark ground.",
+      "Don't add hues outside the five client blues; mix them instead.",
+      "Don't wrap content in cards, pills, badges or rounded containers.",
+      "Don't add a second typeface or a medium-width display voice.",
+      "Don't set small eyebrow or kicker labels above headlines; captions belong to images, fields and footnotes.",
+      "Don't let text begin inside a tonal band, where its ground is still changing.",
+      "Don't state product ingredients, benefits, sizes or prices in the design; unconfirmed facts stay as visible placeholders."
+    ]
+  }
+}

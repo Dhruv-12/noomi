@@ -1,0 +1,67 @@
+---
+import Wordmark from './Wordmark.astro';
+import { products, launch } from '../content/site';
+const year = new Date().getFullYear();
+const shop = [
+  { href: '/', label: 'Home' },
+  ...products.map((p) => ({ href: `/products/${p.slug}`, label: p.name })),
+  { href: '/cart', label: 'Cart', cart: true },
+];
+const help = [
+  { href: '/contact', label: 'Contact' },
+  { href: '/returns-refunds', label: 'Returns & Refunds' },
+  { href: '/privacy-policy', label: 'Privacy Policy' },
+];
+---
+<footer class="foot" data-ground="ink">
+  <div class="wrap foot__inner">
+    <nav class="foot__nav" aria-label="Footer">
+      <div class="foot__group">
+        <h2 class="foot__h">Shop</h2>
+        <ul>{shop.map((l) => <li><a href={l.href} data-cart-open={l.cart ? '' : undefined}>{l.label}</a></li>)}</ul>
+      </div>
+      <div class="foot__group">
+        <h2 class="foot__h">Help</h2>
+        <ul>{help.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+      </div>
+    </nav>
+    <ul class="foot__meta">
+      {launch.instagram && <li><a href={`https://instagram.com/${launch.instagram}`}>Instagram</a></li>}
+      <li><span>© {year} Noomi</span></li>
+    </ul>
+  </div>
+  <a href="/" class="foot__mark" aria-label="Noomi, home"><Wordmark tone="light" label={null} /></a>
+</footer>
+
+<style>
+  .foot { padding-top: var(--s7); overflow: clip; }
+  .foot__inner { display: grid; gap: var(--s6); }
+  .foot__nav { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s5); }
+  .foot__h { margin-bottom: var(--s2); font-size: var(--text-xs); font-weight: 600; font-stretch: 112%; letter-spacing: 0.01em; color: var(--mist-soft); }
+  .foot__group a {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    font-size: var(--text-md);
+    text-decoration: none;
+  }
+  .foot__group a:hover { text-decoration: underline; text-underline-offset: 0.3em; }
+  .foot__meta { display: flex; flex-wrap: wrap; gap: 0 var(--s5); font-size: var(--text-xs); color: var(--mist-soft); }
+  .foot__meta a, .foot__meta span { display: inline-flex; align-items: center; min-height: 44px; }
+
+  /* The light mark, full measure, its feet cropped by the page's last edge */
+  .foot__mark {
+    --w: calc(100vw - 2 * var(--s3));
+    display: block;
+    width: var(--w);
+    margin: var(--s4) 0 calc(-0.08 * var(--w)) var(--s3);
+  }
+  .foot__mark:focus-visible { outline-offset: -8px; }
+
+  @media (min-width: 900px) {
+    .foot { padding-top: var(--s8); }
+    .foot__inner { grid-template-columns: minmax(0, 1fr) auto; align-items: end; }
+    .foot__nav { grid-template-columns: repeat(2, minmax(12rem, auto)); column-gap: var(--s9); justify-content: start; }
+    .foot__mark { --w: min(calc(100vw - 2 * var(--gutter)), 1100px); margin: var(--s6) 0 calc(-0.08 * var(--w)) var(--gutter); }
+  }
+</style>

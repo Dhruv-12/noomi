@@ -1,0 +1,32 @@
+---
+// Home = desire and discovery. One screen, one idea. Product details live on
+// the product pages; the transaction lives in the cart and checkout.
+import Page from '../layouts/Page.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import TheTwo from '../components/TheTwo.astro';
+import ProductFeature from '../components/ProductFeature.astro';
+import CameraRoll from '../components/CameraRoll.astro';
+import RealLife from '../components/RealLife.astro';
+import TooManySteps from '../components/TooManySteps.astro';
+import PreorderBand from '../components/PreorderBand.astro';
+import { products } from '../content/site';
+import { PREORDER_PCT } from '../lib/pricing';
+
+const [serum, cream] = products;
+---
+<Page
+  home
+  title="Noomi: skincare, edited to two"
+  description={`Two products: Calm Serum and Barrier Repair Cream. Pre-order now, ${PREORDER_PCT}% off.`}
+>
+  <Hero />
+  <TooManySteps />
+  <TheTwo />
+  <ProductFeature product={serum} variant="serum" index={0} kicker="Calm" line="First step." />
+  <ProductFeature product={cream} variant="cream" index={1} kicker="Barrier" line="Second step." />
+  <Marquee />
+  <CameraRoll />
+  <RealLife />
+  <PreorderBand />
+</Page>

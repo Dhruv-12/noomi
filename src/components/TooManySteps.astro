@@ -1,0 +1,221 @@
+---
+// "Too many steps?" An ambient brand loop, directly after the hero:
+// the routine words are already there, wandering; they crowd, get struck out
+// in quick overlapping groups and fly off, and the two products land:
+// "That's it." It repeats every ~4.8s on its own.
+//
+// Each word has three layers: presence (all words fade in together, no
+// travel), cancel (crowd → strike → fly out, staggered by group) and wander
+// (its own small, asynchronous float). Everything else runs one infinite CSS
+// animation of the same loop duration, so the loop stays in sync and never
+// needs JS to advance. JS only pauses it while it is off-screen or the tab is hidden.
+// Reduced motion shows the resolved state, still. Routine categories only,
+// no claims; cleanser and sunscreen are deliberately absent.
+import { products } from '../content/site';
+
+// Positions are the word's centre within the stage (percent); phones and
+// desktop get their own composition. dx/dy: how far it drifts while crowding;
+// fx: where it flies off to. wx/wy/wr: its wander (px, deg) and wt its period
+// (s), each different so no two words move together. o: its cancel group.
+type W = { w: string; size: number; r: number; m: [number, number]; d: [number, number]; dx: number; dy: number; fx: number; wx: number; wy: number; wr: number; wt: number; o: number };
+const words: W[] = [
+  { w: 'Toner', size: 2.6, r: -6, m: [26, 14], d: [18, 18], dx: 14, dy: 10, fx: -120, wx: 12, wy: 0, wr: 0, wt: 2.2, o: 0 },
+  { w: 'Essence', size: 2.1, r: 5, m: [70, 8], d: [74, 12], dx: -10, dy: 14, fx: 140, wx: 0, wy: 10, wr: 0, wt: 1.9, o: 2 },
+  { w: 'Ampoule', size: 2.9, r: -3, m: [50, 32], d: [44, 36], dx: 18, dy: -8, fx: 90, wx: 9, wy: 7, wr: 0, wt: 2.5, o: 1 },
+  { w: 'Toner pads', size: 1.7, r: 8, m: [84, 44], d: [90, 50], dx: -26, dy: 6, fx: 160, wx: -10, wy: -6, wr: 0, wt: 2.1, o: 3 },
+  { w: 'Sheet mask', size: 2.3, r: -9, m: [34, 54], d: [26, 64], dx: 22, dy: -10, fx: -140, wx: 0, wy: 6, wr: 0, wt: 1.7, o: 2 },
+  { w: 'Sleeping mask', size: 1.9, r: 4, m: [56, 70], d: [64, 78], dx: -18, dy: -12, fx: 120, wx: 14, wy: 0, wr: 0, wt: 2.9, o: 1 },
+  { w: 'Eye cream', size: 2.5, r: -5, m: [30, 86], d: [36, 90], dx: 16, dy: -14, fx: -130, wx: -6, wy: 3, wr: -4, wt: 2.4, o: 3 },
+  { w: 'Face mist', size: 1.6, r: 10, m: [72, 90], d: [82, 30], dx: -14, dy: -18, fx: 150, wx: 8, wy: -8, wr: 0, wt: 2.0, o: 0 },
+  { w: 'Exfoliator', size: 2, r: -2, m: [58, 22], d: [60, 58], dx: -22, dy: 16, fx: 110, wx: 6, wy: 4, wr: 4, wt: 2.6, o: 4 },
+];
+const [serum, cream] = products;
+---
+<section class="tms" aria-labelledby="tms-title" data-tms>
+  <div class="wrap tms__inner">
+    <h2 id="tms-title" class="tms__title">
+      <span class="t-wide">Too many</span>{' '}
+      <span class="t-black">steps?</span>
+    </h2>
+
+    <div class="tms__stage">
+      <ul class="tms__noise" aria-hidden="true">
+        {words.map((w, i) => (
+          <li class="tms__word" style={`--mx:${w.m[0]}%;--my:${w.m[1]}%;--Dx:${w.d[0]}%;--Dy:${w.d[1]}%;--s:${w.size};--r:${w.r}deg;--dx:${w.dx}px;--dy:${w.dy}px;--fx:${w.fx}px;--wx:${w.wx}px;--wy:${w.wy}px;--wr:${w.wr}deg;--wt:${w.wt}s;--wd:${-(i * 0.37).toFixed(2)}s;--o:${w.o}`}>
+            <span class="tms__cancel"><span class="tms__wander">{w.w}</span></span>
+          </li>
+        ))}
+      </ul>
+
+      <div class="tms__answer">
+        <p class="tms__kept">
+          <a href={`/products/${serum.slug}`}>{serum.name}</a>
+          <span class="tms__plus" aria-hidden="true">+</span>
+          <a href={`/products/${cream.slug}`}>{cream.name}</a>
+        </p>
+        <p class="tms__end">That’s it.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Autoplay control only: run near/in view, pause otherwise.
+  const tms = document.querySelector<HTMLElement>('[data-tms]');
+  if (tms && 'IntersectionObserver' in window) {
+    tms.classList.add('is-paused');
+    let onScreen = false;
+    const sync = () => tms.classList.toggle('is-paused', !onScreen || document.hidden);
+    // Start ~a third of a screen early, so the words are already moving when
+    // the title scrolls in: no empty stage while it waits for 20% visibility.
+    new IntersectionObserver(([e]) => { onScreen = e.isIntersecting; sync(); }, { rootMargin: '0px 0px 35% 0px' }).observe(tms);
+    document.addEventListener('visibilitychange', sync);
+  }
+</script>
+
+<style>
+  /* Pacing: 4.5s loop on phones, 4.8s on desktop; first cut at ~1.3s, while
+     the words are still wandering. --amp scales the wander. */
+  .tms { --loop: 4.5s; --amp: 1; background: var(--ink); color: var(--mist); padding-block: var(--s7) var(--s8); overflow: clip; }
+  .tms__inner { display: grid; gap: var(--s5); }
+  /* The question steps back while the answer is on screen, so the two products lead */
+  .tms__title { display: grid; position: relative; z-index: 2; animation: question var(--loop) var(--ease-in-out) infinite both; }
+  .tms__title .t-wide { font-size: clamp(2.25rem, 10vw, 4.5rem); color: var(--powder); }
+  .tms__title .t-black { font-size: clamp(4rem, 20vw, 9rem); line-height: 0.86; }
+
+  /* The stage has a fixed height, so nothing ever shifts between loops */
+  .tms__stage { position: relative; height: clamp(420px, 118vw, 560px); }
+
+  /* ---------- The noise ---------- */
+  .tms__noise { position: absolute; inset: 0; }
+  /* Layer 1, presence: every word fades in together in ~160ms, no travel, and
+     the whole noise hides once it has cleared (64%), which is when the other
+     layers quietly reset for the next loop */
+  .tms__word {
+    position: absolute;
+    left: var(--mx);
+    top: var(--my);
+    font-stretch: var(--tight);
+    font-weight: 800;
+    font-size: calc(var(--s) * 0.82rem + 0.4vw);
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--mist);
+    translate: -50% -50%;
+    rotate: var(--r);
+    animation: presence var(--loop) linear infinite both;
+  }
+  .tms__word:nth-child(3n) { color: var(--lavender); }
+  .tms__word:nth-child(4n) { color: var(--powder); }
+  @keyframes presence {
+    0% { opacity: 0; }
+    3.5%, 50% { opacity: 1; }
+    52%, 100% { opacity: 0; }
+  }
+
+  /* Layer 2, cancel: crowd in slowly, then nope → nudge → fly off, in five
+     overlapping groups 0.1s apart */
+  .tms__cancel { display: inline-block; animation: cancel var(--loop) var(--ease-in-out) calc(var(--o) * 0.14s) infinite both; }
+  @keyframes cancel {
+    0%, 80.1%, 100% { opacity: 1; transform: none; }
+    27% { opacity: 1; transform: translate(calc(var(--dx) * 0.4), calc(var(--dy) * 0.4)) rotate(calc(var(--r) * 0.2)) scale(1.01); }
+    31.2% { opacity: 0.6; transform: translate(calc(var(--dx) * 0.4 + var(--fx) * 0.06), calc(var(--dy) * 0.4 - 4px)) rotate(calc(var(--r) * 0.2)) scale(0.98); }
+    37.7%, 80% { opacity: 0; transform: translate(var(--fx), calc(var(--dy) - 16px)) rotate(var(--r)) scale(0.88); }
+  }
+
+  /* Layer 3, wander: each word floats on its own path and period, so the
+     noise is visibly alive from the first frame */
+  .tms__wander {
+    position: relative;
+    display: inline-block;
+    animation: wander var(--wt) var(--ease-in-out) var(--wd) infinite alternate;
+    will-change: transform;
+  }
+  @keyframes wander {
+    0% { transform: translate(0, 0) rotate(0deg); }
+    50% { transform: translate(calc(var(--wx) * var(--amp)), calc(var(--wy) * -0.4 * var(--amp))) rotate(calc(var(--wr) * 0.5)); }
+    100% { transform: translate(calc(var(--wx) * -0.5 * var(--amp)), calc(var(--wy) * var(--amp))) rotate(var(--wr)); }
+  }
+
+  /* The strike travels with the word; it resets while the noise is hidden */
+  .tms__wander::after {
+    content: '';
+    position: absolute;
+    left: -0.06em;
+    right: -0.06em;
+    top: 54%;
+    height: 0.12em;
+    background: var(--blush);
+    transform-origin: left center;
+    transform: scaleX(0);
+    animation: strike var(--loop) var(--ease-out) calc(var(--o) * 0.14s) infinite both;
+  }
+  @keyframes strike {
+    0%, 27%, 80.1%, 100% { transform: scaleX(0); }
+    31.2%, 80% { transform: scaleX(1); }
+  }
+
+  /* ---------- The answer ---------- */
+  .tms__answer { position: absolute; inset: 0; display: grid; align-content: center; gap: var(--s5); z-index: 1; }
+  .tms__kept { display: grid; justify-items: start; gap: var(--s1); animation: kept var(--loop) var(--ease-out) infinite both; }
+  .tms__kept a {
+    font-stretch: var(--tight);
+    font-weight: 800;
+    /* one line each, even "Barrier Repair Cream" at 390px */
+    font-size: clamp(2rem, 9.2vw, 5.5rem);
+    line-height: 1.05;
+    white-space: nowrap;
+    color: var(--mist);
+    text-decoration: underline;
+    text-decoration-color: var(--blush);
+    text-decoration-thickness: 0.1em;
+    text-underline-offset: 0.12em;
+    transition: color 300ms var(--ease-out);
+  }
+  .tms__kept a:hover { color: var(--blush); }
+  .tms__plus { font-stretch: var(--tight); font-weight: 800; font-size: clamp(2rem, 9vw, 4rem); line-height: 1; color: var(--calm); }
+  .tms__end { font-stretch: var(--wide); font-weight: 300; font-size: clamp(2.25rem, 10vw, 5rem); letter-spacing: -0.04em; line-height: 1; color: var(--lavender); animation: end var(--loop) var(--ease-out) infinite both; }
+  /* Hidden (and unclickable) until they land; a soft fade back to calm at the seam */
+  @keyframes kept {
+    0%, 52.5% { opacity: 0; visibility: hidden; transform: translateY(24px) scale(0.96); }
+    61%, 89.5% { opacity: 1; visibility: visible; transform: none; }
+    100% { opacity: 0; visibility: hidden; transform: translateY(-8px); }
+  }
+  @keyframes question {
+    0%, 51% { opacity: 1; }
+    59.5%, 89.5% { opacity: 0.3; }
+    100% { opacity: 1; }
+  }
+  @keyframes end {
+    0%, 68% { opacity: 0; visibility: hidden; transform: translateY(16px); }
+    76%, 89.5% { opacity: 1; visibility: visible; transform: none; }
+    100% { opacity: 0; visibility: hidden; transform: translateY(-8px); }
+  }
+
+  /* Off-screen or hidden tab: hold the frame */
+  .tms.is-paused .tms__word,
+  .tms.is-paused .tms__cancel,
+  .tms.is-paused .tms__wander,
+  .tms.is-paused .tms__wander::after,
+  .tms.is-paused .tms__kept,
+  .tms.is-paused .tms__end,
+  .tms.is-paused .tms__title { animation-play-state: paused; }
+
+  /* Reduced motion: the resolved message, still */
+  @media (prefers-reduced-motion: reduce) {
+    .tms__noise { display: none; }
+    .tms__stage { height: auto; }
+    .tms__answer { position: static; }
+    .tms__kept, .tms__end { animation: none; opacity: 1; visibility: visible; transform: none; }
+    .tms__title { animation: none; }
+  }
+
+  @media (min-width: 900px) {
+    .tms { --loop: 4.8s; --amp: 1.35; padding-block: var(--s9) var(--s10); }
+    .tms__inner { grid-template-columns: minmax(0, 4fr) minmax(0, 8fr); column-gap: var(--s8); align-items: start; }
+    .tms__title { padding-top: var(--s6); }
+    .tms__stage { height: 560px; }
+    .tms__word { left: var(--Dx); top: var(--Dy); font-size: calc(var(--s) * 1.2rem); }
+    .tms__kept { grid-template-columns: auto; }
+  }
+</style>

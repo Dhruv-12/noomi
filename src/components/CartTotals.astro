@@ -1,0 +1,25 @@
+---
+// The cart's money rows, shared by the drawer and /cart. Values are filled
+// live by cart-ui.ts; nothing is estimated while a fact is still pending.
+import { pending } from '../content/business';
+import { PREORDER_PCT } from '../lib/pricing';
+---
+<dl class="totals">
+  <div><dt>Subtotal</dt><dd data-cart-subtotal>{pending.price}</dd></div>
+  <div class="totals__disc"><dt>Pre-order discount · {PREORDER_PCT}%</dt><dd data-cart-discount>−{PREORDER_PCT}%</dd></div>
+  <div class="totals__note"><dt>Shipping</dt><dd>{pending.toConfirm}</dd></div>
+  <div class="totals__note"><dt>Tax</dt><dd>{pending.toConfirm}</dd></div>
+  <div class="totals__total"><dt>Total</dt><dd data-cart-total>{pending.toConfirm}</dd></div>
+</dl>
+
+<style>
+  .totals { display: grid; gap: var(--s1); }
+  .totals div { display: flex; justify-content: space-between; gap: var(--s4); }
+  .totals dt { font-weight: 600; }
+  .totals dd { font-weight: 650; text-align: right; font-variant-numeric: tabular-nums; }
+  .totals__note { font-size: var(--text-sm); color: var(--ink-soft); }
+  .totals__note dt, .totals__note dd { font-weight: 500; }
+  .totals__disc { font-size: var(--text-sm); color: var(--blue); }
+  .totals__disc dt, .totals__disc dd { font-weight: 600; }
+  .totals__total { margin-top: var(--s2); padding-top: var(--s2); border-top: 1px solid color-mix(in srgb, var(--ink) 14%, transparent); }
+</style>

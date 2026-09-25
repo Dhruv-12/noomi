@@ -1,0 +1,171 @@
+---
+// Legal documents: the Noomi page, set for reading and for citing.
+// Clauses are numbered in the source (not by CSS counters) so a number in a
+// customer email always matches the page.
+import Page from './Page.astro';
+import { business, legal } from '../content/business';
+
+interface Props {
+  title: string;
+  description: string;
+  soft: string;
+  hard: string;
+  formalTitle: string;
+  effectiveDate: string;
+  sections: { id: string; title: string }[];
+}
+const { title, description, soft, hard, formalTitle, effectiveDate, sections } = Astro.props;
+---
+<Page title={title} description={description}>
+  <article class="doc">
+    <header class="wrap doc__head">
+      <h1 class="doc__title">
+        <span class="t-wide">{soft}</span>
+        <span class="t-black">{hard}</span>
+      </h1>
+      <p class="doc__formal">{formalTitle}</p>
+      <dl class="doc__meta">
+        <div><dt>Effective date</dt><dd>{effectiveDate}</dd></div>
+        <div><dt>Operated by</dt><dd>{business.legalEntityName}</dd></div>
+      </dl>
+      {!legal.reviewedByCounsel && (
+        <p class="doc__draft" role="note">
+          <strong>Draft, pending legal review.</strong> This policy has not yet been reviewed by counsel and may change
+          before Noomi takes orders. Bracketed items such as {business.legalEntityName} are details still to be confirmed.
+        </p>
+      )}
+    </header>
+
+    <div class="wrap doc__layout">
+      <nav class="doc__toc" aria-label="Contents">
+        <details class="toc" open>
+          <summary class="toc__summary">Contents <span class="toc__n">{sections.length} sections</span></summary>
+          <ol class="toc__list">
+            {sections.map((s, i) => (
+              <li><a href={`#${s.id}`}><span class="toc__num">{i + 1}.</span> {s.title}</a></li>
+            ))}
+          </ol>
+        </details>
+      </nav>
+
+      <div class="legal">
+        <slot />
+      </div>
+    </div>
+  </article>
+</Page>
+
+<script>
+  // Collapse the contents on phones by default; keep them open on desktop.
+  const toc = document.querySelector<HTMLDetailsElement>('.toc');
+  if (toc && matchMedia('(max-width: 899px)').matches) toc.open = false;
+  // Following a contents link on a phone closes the list behind it.
+  toc?.addEventListener('click', (e) => {
+    if ((e.target as HTMLElement).closest('a') && matchMedia('(max-width: 899px)').matches) toc.open = false;
+  });
+</script>
+
+<style>
+  .doc__head { display: grid; gap: var(--s5); padding-block: var(--s8) var(--s7); }
+  .doc__title { display: grid; }
+  .doc__title .t-wide { font-size: clamp(2.5rem, 12vw, 5.5rem); }
+  .doc__title .t-black { font-size: clamp(3.5rem, 18vw, 8.5rem); color: var(--blue); }
+  .doc__formal { max-width: 34ch; font-size: var(--text-xl); line-height: 1.3; }
+  .doc__meta { display: grid; gap: var(--s1); font-size: var(--text-sm); }
+  .doc__meta div { display: flex; gap: var(--s3); }
+  .doc__meta dt { font-weight: 600; }
+  .doc__meta dd { color: var(--ink-soft); }
+  .doc__draft {
+    max-width: 62ch;
+    padding-top: var(--s4);
+    border-top: 2px solid var(--blue);
+    font-size: var(--text-sm);
+    color: var(--ink-soft);
+  }
+  .doc__draft strong { color: var(--ink); font-weight: 650; }
+
+  .doc__layout { display: grid; gap: var(--s7); }
+
+  /* Contents */
+  .toc { border-block: 1px solid color-mix(in srgb, var(--ink) 16%, transparent); }
+  .toc__summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 52px;
+    font-weight: 650;
+    cursor: pointer;
+    list-style: none;
+  }
+  .toc__summary::-webkit-details-marker { display: none; }
+  .toc__summary::after {
+    content: '';
+    width: 10px; height: 10px;
+    border-right: 2px solid currentColor; border-bottom: 2px solid currentColor;
+    transform: translateY(-3px) rotate(45deg);
+    transition: transform 300ms var(--ease-out);
+  }
+  .toc[open] .toc__summary::after { transform: translateY(2px) rotate(-135deg); }
+  .toc__n { margin-left: auto; margin-right: var(--s4); font-size: var(--text-sm); font-weight: 500; color: var(--ink-soft); }
+  .toc__list { display: grid; padding-bottom: var(--s4); }
+  .toc__list a {
+    display: flex;
+    gap: var(--s2);
+    min-height: 40px;
+    align-items: center;
+    font-size: var(--text-sm);
+    text-decoration: none;
+    color: var(--ink-soft);
+  }
+  .toc__list a:hover { color: var(--ink); }
+  .toc__num { min-width: 1.75rem; font-variant-numeric: tabular-nums; font-weight: 600; color: var(--ink); }
+
+  /* ---------- Prose (slotted content, so :global) ---------- */
+  .legal { min-width: 0; max-width: 68ch; font-size: 1rem; line-height: 1.65; }
+  .legal :global(section) { scroll-margin-top: 84px; padding-top: var(--s7); }
+  .legal :global(section:first-child) { padding-top: 0; }
+  .legal :global(h2) {
+    display: flex;
+    gap: var(--s3);
+    margin-bottom: var(--s4);
+    padding-top: var(--s4);
+    border-top: 1px solid color-mix(in srgb, var(--ink) 16%, transparent);
+    font-stretch: var(--wide);
+    font-weight: 300;
+    font-size: clamp(1.5rem, 6.4vw, 2rem);
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    text-wrap: balance;
+  }
+  .legal :global(h2 .n) { font-weight: 300; color: var(--blue); font-variant-numeric: tabular-nums; }
+  .legal :global(h3) { margin: var(--s5) 0 var(--s2); font-weight: 650; font-size: 1.0625rem; }
+  .legal :global(p) { margin-bottom: var(--s3); }
+  .legal :global(.clause) { display: grid; grid-template-columns: 2.75rem minmax(0, 1fr); column-gap: var(--s2); margin-bottom: var(--s3); scroll-margin-top: 84px; }
+  .legal :global(.clause > .cn) { font-weight: 650; font-variant-numeric: tabular-nums; }
+  .legal :global(.clause > div > p:last-child) { margin-bottom: 0; }
+  .legal :global(.sub) { display: grid; gap: var(--s1); margin: var(--s2) 0 var(--s3); }
+  .legal :global(.sub > li) { display: grid; grid-template-columns: 2.25rem minmax(0, 1fr); }
+  .legal :global(.sub > li > .sn) { color: var(--ink-soft); }
+  .legal :global(dl.defs) { display: grid; gap: var(--s3); margin: var(--s3) 0; }
+  .legal :global(dl.defs dt) { font-weight: 650; }
+  .legal :global(dl.defs dd) { margin: 0; }
+  .legal :global(.key) {
+    margin: var(--s4) 0;
+    padding: var(--s4) 0 var(--s4) 0;
+    border-block: 2px solid var(--ink);
+    font-weight: 500;
+  }
+  .legal :global(address) { font-style: normal; display: grid; gap: var(--s1); margin-top: var(--s3); }
+  .legal :global(a) { text-decoration-thickness: 1px; }
+  .legal :global(strong) { font-weight: 650; }
+
+  @media (min-width: 900px) {
+    .doc__head { padding-block: var(--s9) var(--s8); }
+    .doc__layout { grid-template-columns: 17rem minmax(0, 1fr); column-gap: var(--s9); align-items: start; }
+    .doc__toc { position: sticky; top: 84px; max-height: calc(100vh - 100px); overflow-y: auto; }
+    .toc { border-bottom: 0; }
+    .toc__summary { pointer-events: none; }
+    .toc__summary::after { display: none; }
+    .legal { font-size: 1.0625rem; }
+  }
+</style>

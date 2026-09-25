@@ -1,0 +1,9 @@
+---
+// A numbered clause. The number is also its anchor: /returns-refunds#c-4-2
+interface Props { n: string }
+const { n } = Astro.props;
+---
+<div class="clause" id={`c-${n.replace(/\./g, '-')}`}>
+  <span class="cn">{n}</span>
+  <div><slot /></div>
+</div>

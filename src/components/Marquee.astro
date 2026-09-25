@@ -1,0 +1,35 @@
+---
+// A slow ticker between the hero and the products. Decorative repetition of
+// things said elsewhere on the page, so it is hidden from assistive tech.
+const items = ['Skin first. Everything else later.', 'Calm Serum', 'Barrier Repair Cream', 'Two is enough', 'Now on pre-order'];
+---
+<div class="tick" aria-hidden="true">
+  <div class="tick__track">
+    {[0, 1].map(() => (
+      <ul class="tick__set">
+        {items.map((t) => <li><span class="tick__dot"></span>{t}</li>)}
+      </ul>
+    ))}
+  </div>
+</div>
+
+<style>
+  .tick { overflow: hidden; background: var(--ink); color: var(--lavender); border-block: 1px solid color-mix(in srgb, var(--mist) 10%, transparent); }
+  .tick__track { display: flex; width: max-content; animation: tick 38s linear infinite; }
+  .tick:hover .tick__track { animation-play-state: paused; }
+  .tick__set { display: flex; flex: none; }
+  .tick__set li {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s4);
+    padding: var(--s3) var(--s4);
+    white-space: nowrap;
+    font-stretch: var(--wide);
+    font-weight: 300;
+    font-size: 1rem;
+    letter-spacing: -0.01em;
+  }
+  .tick__dot { width: 6px; height: 6px; border-radius: 50%; background: var(--blush); flex: none; }
+  @keyframes tick { to { transform: translateX(-50%); } }
+  @media (prefers-reduced-motion: reduce) { .tick__track { animation: none; } }
+</style>

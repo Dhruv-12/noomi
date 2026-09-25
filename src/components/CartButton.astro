@@ -1,0 +1,59 @@
+---
+// The cart control: a bag icon and a quantity badge, one tap target.
+// It opens the cart drawer; without JS it is a plain link to /cart.
+interface Props { class?: string }
+const { class: className } = Astro.props;
+---
+<a href="/cart" class:list={['cart-btn', className]} data-cart-open data-cart-label aria-label="Cart, empty" data-count="0">
+  <svg class="cart-btn__icon" viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">
+    <path d="M4.5 8h15l-1 12.5h-13z" />
+    <path d="M8.5 10.5V7a3.5 3.5 0 0 1 7 0v3.5" />
+  </svg>
+  <span class="cart-btn__n" data-cart-count aria-hidden="true">0</span>
+</a>
+
+<style>
+  .cart-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-width: 44px;
+    min-height: 44px;
+    padding-inline: var(--s2);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .cart-btn__icon {
+    flex: none;
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.75;
+    stroke-linecap: square;
+    stroke-linejoin: miter;
+  }
+  /* Small square badge, subordinate to the mark: a hairline box at 0, filled
+     in the ground's ink once the cart has something (--cart-fg / --cart-n-on
+     are set per ground; dark grounds invert them). */
+  .cart-btn__n {
+    flex: none;
+    display: inline-grid;
+    place-items: center;
+    min-width: 18px;
+    height: 18px;
+    padding-inline: 3px;
+    font-size: 0.6875rem;
+    font-weight: 650;
+    line-height: 1;
+    font-variant-numeric: tabular-nums;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, currentColor 45%, transparent);
+    transition: background-color 300ms var(--ease-out), color 300ms var(--ease-out);
+  }
+  .cart-btn:not([data-count='0']) .cart-btn__n {
+    background: var(--cart-fg, var(--ink));
+    color: var(--cart-n-on, var(--mist));
+    box-shadow: none;
+  }
+</style>
